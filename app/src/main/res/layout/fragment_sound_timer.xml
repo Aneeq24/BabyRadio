@@ -1,13 +1,179 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cz.master.extern.babyradio.fragments.SoundTimer">
+    android:orientation="vertical"
+    tools:context=".fragments.SoundTimerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="@dimen/container_babytips_top_btns_width"
+        android:layout_height="@dimen/container_babytips_top_btns_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/container_babytips_top_btns_top_margin"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/txt_baby_tips_stopwatch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@drawable/btn_baby_tips_selector"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:text="Stopwatch"
+            android:textColor="@color/txt_babytips_selector"
+            android:textSize="@dimen/txt_baby_btns_top_textsize" />
+
+        <TextView
+            android:id="@+id/txt_baby_tips_clock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@drawable/btn_baby_tips_selector_right"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:text="Clock"
+            android:textColor="@color/txt_babytips_selector"
+            android:textSize="@dimen/txt_baby_btns_top_textsize" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="@dimen/container_babytips_top_btns_width"
+            android:layout_height="160dp"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <cn.carbswang.android.numberpickerview.library.NumberPickerView
+                android:id="@+id/picker_hour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="picker_hour"
+                app:npv_HintText="@string/hour_hint"
+                app:npv_ItemPaddingHorizontal="5dp"
+                app:npv_ItemPaddingVertical="5dp"
+                app:npv_ShowCount="3"
+                app:npv_TextArray="@array/hour_display"
+                app:npv_TextSizeNormal="16sp"
+                app:npv_TextSizeSelected="20sp"
+                app:npv_WrapSelectorWheel="true" />
+
+            <cn.carbswang.android.numberpickerview.library.NumberPickerView
+                android:id="@+id/picker_minute"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="picker_minute"
+                app:npv_HintText="@string/minute_hint"
+                app:npv_ItemPaddingHorizontal="5dp"
+                app:npv_ItemPaddingVertical="5dp"
+                app:npv_ShowCount="3"
+                app:npv_TextArray="@array/minute_display"
+                app:npv_TextSizeNormal="16sp"
+                app:npv_TextSizeSelected="20sp"
+                app:npv_WrapSelectorWheel="true" />
+
+            <cn.carbswang.android.numberpickerview.library.NumberPickerView
+                android:id="@+id/picker_half_day"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="picker_half_day"
+                android:visibility="gone"
+                app:npv_ItemPaddingHorizontal="5dp"
+                app:npv_ItemPaddingVertical="5dp"
+                app:npv_ShowCount="3"
+                app:npv_TextArray="@array/half_day"
+                app:npv_TextSizeNormal="16sp"
+                app:npv_TextSizeSelected="20sp"
+                app:npv_WrapSelectorWheel="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/Label_TimerCountdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/label_countdown_placeholder"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Label_TimerDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Label_TimerCountdown"
+                android:layout_centerHorizontal="true"
+                android:text="@string/label_countdown_description_placeholder"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.SwitchCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:text="Baby Monitor"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/MonitorGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <SeekBar
+            android:id="@+id/SensitivityBar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/img_seekbar_background"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/meter_color"
+            android:thumb="@drawable/ic_grapharrow"
+            android:thumbOffset="15dp" />
+
+        <TextView
+            android:id="@+id/TipLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SensitivityBar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:gravity="center"
+            android:minLines="3"
+            android:text="@string/label_monitor_on_description" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/Button_TimerStartStop"
+        android:layout_width="229dp"
+        android:layout_height="37dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/btn_start_stop_timer_selector"
+        android:text="Start"
+        android:textColor="#ffffff" />
+</LinearLayout>

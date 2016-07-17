@@ -2,16 +2,20 @@ package cz.master.extern.babyradio.adopter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cz.master.extern.babyradio.R;
+import cz.master.extern.babyradio.helper.DbHelper;
 import cz.master.extern.babyradio.models.MediaFileModel;
 
 /**
@@ -21,11 +25,13 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
     List<MediaFileModel> allMediaFiles;
     Activity context;
     LayoutInflater inflater;
+    DbHelper dbHelper;
 
     public BabyRadioMediaAdopter(@NonNull Activity context) {
         this.allMediaFiles = new ArrayList<>();
         this.context = context;
         inflater = context.getLayoutInflater();
+        dbHelper = new DbHelper(context);
     }//end of constructor
 
     @Override
@@ -65,6 +71,18 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
         viewHolder.txt_babyradio_media_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String message;
+                if (v.isSelected()) {
+                    message = allMediaFiles.get(position).name + " stopped by User";
+                } else {
+
+                    message = allMediaFiles.get(position).name + " started by User";
+                }
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm aa");
+                String currentDateTimeString = df.format(new Date());
+                message = currentDateTimeString + ":" + message;
+                Log.d("mesage", message);
+                dbHelper.insertLog(message);
                 selectedPosition = position;
                 v.setSelected(true);
                 // notifyDataSetChanged();
