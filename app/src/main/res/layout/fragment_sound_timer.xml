@@ -39,15 +39,18 @@
             android:textSize="@dimen/txt_baby_btns_top_textsize" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/container_timer_picker"
             android:layout_width="@dimen/container_babytips_top_btns_width"
             android:layout_height="160dp"
+            android:layout_gravity="center"
             android:animateLayoutChanges="true"
             android:gravity="center"
             android:orientation="horizontal">
@@ -99,8 +102,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/container_timer_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -119,12 +124,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/Label_TimerCountdown"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/label_countdown_description_placeholder"
                 android:textSize="15sp" />
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_baby_monitor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
@@ -164,7 +172,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:gravity="center"
             android:minLines="3"
-            android:text="@string/label_monitor_on_description" />
+            android:text="@string/label_monitor_off_description" />
     </RelativeLayout>
 
     <Button

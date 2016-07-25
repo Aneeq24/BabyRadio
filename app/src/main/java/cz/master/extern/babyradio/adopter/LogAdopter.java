@@ -16,7 +16,7 @@ import cz.master.extern.babyradio.R;
  * Created by Yasir Iqbal on 7/17/2016.
  */
 public class LogAdopter extends BaseAdapter {
-    ArrayList<String> allLogRecords;
+    public ArrayList<String> allLogRecords;
     Activity context;
     LayoutInflater inflater;
 
@@ -52,12 +52,12 @@ public class LogAdopter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         viewHolder.Label.setText(allLogRecords.get(position));
-        if (position % 3 == 0) {
-            if (position > 0)
-                viewHolder.Icon.setSelected(true);
-        } else {
+        if (viewHolder.Label.getText().toString().contains("start")) {
             viewHolder.Icon.setSelected(false);
+        } else {
+            viewHolder.Icon.setSelected(true);
         }
         convertView.setTag(viewHolder);
         return convertView;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -53,5 +54,12 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         db.close();
         return allLog;
+    }
+
+    public void deleteAllLog() {
+        SQLiteDatabase db = getWritableDatabase();
+        int deleteRecord = db.delete(logTableName, null, null);
+        Log.d("deleted Record", deleteRecord + "");
+        db.close();
     }
 }

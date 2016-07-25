@@ -162,6 +162,25 @@ public class RattleView extends View implements SensorEventListener {
         float diff = (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
         if (diff <= (ballRadius + ballRadius)) {
 
+            if (ballX2 + ballRadius > ballX1) {
+                ballSpeedX2 = -ballSpeedX2;
+                ballX2 = (-ballX1 - ballRadius);
+                // enemyWallCollision();
+            } else if (ballX2 - ballRadius < ballX1) {
+                ballSpeedX2 = -ballSpeedX2;
+                ballX2 = (-ballX1 + ballRadius);
+                //  enemyWallCollision();
+            }
+            // Detect Wall Collision on vertical plane
+            if (ballY2 + ballRadius > ballY1) {
+                ballSpeedY2 = -ballSpeedY2;
+                ballY2 = (-ballY1 - ballRadius);
+                //enemyWallCollision();
+            } else if (ballY2 - ballRadius < ballY1) {
+                ballSpeedY2 = -ballSpeedY2;
+                ballY2 = (-ballY1 + ballRadius);
+                // enemyWallCollision();
+            }
         }//end of if
     }
 
