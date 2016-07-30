@@ -1,9 +1,11 @@
 package cz.master.extern.babyradio.fragments;
 
 
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +21,42 @@ import java.util.concurrent.TimeUnit;
 
 import cn.carbswang.android.numberpickerview.library.NumberPickerView;
 import cz.master.extern.babyradio.R;
+import cz.master.extern.babyradio.helper.BarLevelDrawable;
+import cz.master.extern.babyradio.helper.MicrophoneInput;
 import cz.master.extern.babyradio.helper.SoundTimer;
+import cz.master.extern.babyradio.interfaces.MicrophoneInputListener;
 import cz.master.extern.babyradio.ui.HomeActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SoundTimerFragment extends Fragment implements View.OnClickListener {
+public class SoundTimerFragment extends Fragment implements View.OnClickListener, MicrophoneInputListener {
 
+
+    private static final String TAG = "Sound Level";
 
     public SoundTimerFragment() {
         // Required empty public constructor
     }
 
+    BarLevelDrawable mBarLevel;
+    MicrophoneInput micInput;  // The micInput object provides real time audio.
+    double mOffsetdB = 0;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
+    // The Google ASR input requirements state that audio input sensitivity
+    // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
+    // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
+    double mGain = 2500.0 / Math.pow(10.0, 90.0 / 20.0);
+    // For displaying error in calibration.
+    double mDifferenceFromNominal = 0.0;
+    double mRmsSmoothed;  // Temporally filtered version of RMS.
+    double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
+    private int mSampleRate=8000;  // The audio sampling rate to use.
+    private int mAudioSource= MediaRecorder.AudioSource.VOICE_RECOGNITION;  // The audio source to use.
 
+    // Variables to monitor UI update and check for slow updates.
+    private volatile boolean mDrawing=false;
+    private volatile int mDrawingCollided;
+    //***********************
     View rootView;
     private NumberPickerView mPickerViewH;
     private NumberPickerView mPickerViewM;
@@ -77,6 +101,12 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         Button_TimerStartStop.setOnClickListener(this);
         switch_baby_monitor.setOnClickListener(this);
         SensitivityBar.setEnabled(switch_baby_monitor.isSelected());
+        //***************************
+        mBarLevel = (BarLevelDrawable) rootView.findViewById(R.id.bar_level_drawable_view);
+        micInput = new MicrophoneInput(this);
+        micInput.setSampleRate(mSampleRate);
+        micInput.setAudioSource(mAudioSource);
+        micInput.start();
     }//end of init
 
     /*
@@ -195,4 +225,44 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                 break;
         }//end of switch
     }//end of onClick
+
+    @Override
+    public void processAudioFrame(short[] audioFrame) {
+        if (!mDrawing) {
+            mDrawing = true;
+            // Compute the RMS value. (Note that this does not remove DC).
+            double rms = 0;
+            for (int i = 0; i < audioFrame.length; i++) {
+                rms += audioFrame[i] * audioFrame[i];
+            }
+            rms = Math.sqrt(rms / audioFrame.length);
+
+            // Compute a smoothed version for less flickering of the display.
+            mRmsSmoothed = mRmsSmoothed * mAlpha + (1 - mAlpha) * rms;
+            final double rmsdB = 20.0 * Math.log10(mGain * mRmsSmoothed);
+
+            // Set up a method that runs on the UI thread to update of the LED bar
+            // and numerical display.
+            mBarLevel.post(new Runnable() {
+                @Override
+                public void run() {
+                    // The bar has an input range of [0.0 ; 1.0] and 10 segments.
+                    // Each LED corresponds to 6 dB.
+                    mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
+
+//                    DecimalFormat df = new DecimalFormat("##");
+//                    mdBTextView.setText(df.format(20 + rmsdB));
+//
+//                    DecimalFormat df_fraction = new DecimalFormat("#");
+//                    int one_decimal = (int) (Math.round(Math.abs(rmsdB * 10))) % 10;
+//                    mdBFractionTextView.setText(Integer.toString(one_decimal));
+                    mDrawing = false;
+                }
+            });
+        } else {
+            mDrawingCollided++;
+            Log.v(TAG, "Level bar update collision, i.e. update took longer " +
+                    "than 20ms. Collision count" + Double.toString(mDrawingCollided));
+        }
+    }//end of function
 }//end of fragment
