@@ -157,23 +157,23 @@
                 android:id="@+id/SensitivityBar"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/img_seekbar_background"
                 android:max="100"
-                android:layout_gravity="bottom"
+                android:padding="0dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/meter_color"
-                android:thumb="@drawable/ic_grapharrow"
+                android:thumb="@android:color/transparent"
                 android:visibility="visible" />
 
             <SeekBar
                 android:id="@+id/SensitivityBar_upper"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
+                android:layout_marginBottom="6dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:background="@android:color/transparent"
                 android:max="100"
                 android:progress="50"
@@ -185,8 +185,8 @@
                 android:id="@+id/bar_level_drawable_view"
                 class="cz.master.extern.babyradio.helper.BarLevelDrawable"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="48dp"></view>
+                android:layout_height="48dp"
+                android:visibility="gone"></view>
 
         </FrameLayout>
 

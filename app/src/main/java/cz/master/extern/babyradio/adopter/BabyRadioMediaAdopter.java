@@ -30,8 +30,8 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
     Activity context;
     LayoutInflater inflater;
     DbHelper dbHelper;
-    public static MediaPlayer mediaPlayerObj;
-    public static String pathForMediaFile;
+    public  MediaPlayer mediaPlayerObj;
+    public  String pathForMediaFile;
     BabyRadioFragment babyRadioFragment;
 
     public BabyRadioMediaAdopter(@NonNull Activity context, BabyRadioFragment babyRadioFragment) {
@@ -112,9 +112,9 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
     }//end of getView
 
     public void insertMessageToDb(String message) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String currentDateTimeString = df.format(new Date());
-        message = currentDateTimeString + ":" + message;
+        message = currentDateTimeString + ": " + message;
         Log.d("mesage", message);
         dbHelper.insertLog(message);
     }//end of insertMessageToDb
@@ -143,7 +143,6 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
             mediaPlayerObj.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
                     mp.start();
                 }
             });

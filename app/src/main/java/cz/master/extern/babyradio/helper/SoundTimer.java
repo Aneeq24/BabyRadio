@@ -58,7 +58,7 @@ public class SoundTimer extends CountDownTimer {
             });
         }
         if (textForBabyRadioScreen != null) {
-            textForBabyRadioScreen.setText("Sound Timer " + temp);
+            textForBabyRadioScreen.setText("Sound Timer: " + temp);
         }
 
     }//end of onTick

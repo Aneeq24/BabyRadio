@@ -3,8 +3,10 @@ package cz.master.extern.babyradio.helper;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.hardware.Sensor;
@@ -13,6 +15,9 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import cz.master.extern.babyradio.R;
+import cz.master.extern.babyradio.ratioresolver.CalculateRatio;
 
 public class RattleView extends View implements SensorEventListener {
 
@@ -25,8 +30,8 @@ public class RattleView extends View implements SensorEventListener {
     private float ballRadius = 30;
     private float ballX1 = 50;
     private float ballY1 = 50;
-    private float ballSpeedX1 = 5;
-    private float ballSpeedY1 = 3;
+    private float ballSpeedX1 = 7;
+    private float ballSpeedY1 = 4;
     private float maxSpeed = 20;
     private RectF ballBounds1;
     private Paint ballColor1;
@@ -52,6 +57,14 @@ public class RattleView extends View implements SensorEventListener {
     private RectF enemyBallBounds;
     private Paint enemyColor;
     Context context;
+    Bitmap backgroundBitmap;
+    Bitmap scaledBackgroundBitmap;
+    Paint paintForBackground;
+    Resources res;
+
+    Bitmap ball1, ball2, ball3, ball4, ball5;
+    Bitmap scaledBall1, scaledBall2, scaledBall3, scaledBall4, scaledBall5;
+    private float ballRadius1, ballRadius2, ballRadius3, ballRadius4, ballRadius5;
 
     public RattleView(Context context) {
         super(context);
@@ -60,13 +73,24 @@ public class RattleView extends View implements SensorEventListener {
         enemyBallBounds = new RectF();
 
         ballBounds1 = new RectF();
-        ballColor1 = new Paint();
+        ballColor1 = new Paint(Paint.FILTER_BITMAP_FLAG);
         enemyColor = new Paint();
 
         ballBounds2 = new RectF();
         ballColor2 = new Paint();
-        this.setFocusableInTouchMode(true);
 
+        res = getResources();
+        backgroundBitmap = BitmapFactory.decodeResource(res, R.drawable.bg_restmoment);
+        paintForBackground = new Paint(Paint.FILTER_BITMAP_FLAG);
+        ball1 = BitmapFactory.decodeResource(res, R.drawable.planet1);
+        ball2 = BitmapFactory.decodeResource(res, R.drawable.planet2);
+        ball3 = BitmapFactory.decodeResource(res, R.drawable.planet3);
+        ball4 = BitmapFactory.decodeResource(res, R.drawable.planet4);
+        ball5 = BitmapFactory.decodeResource(res, R.drawable.planet5);
+        ballRadius3 = (float) (0.5 * Math.sqrt(ball3.getWidth() * ball3.getWidth() + ball3.getHeight() * ball3.getHeight()));
+        ballRadius4 = (float) (0.5 * Math.sqrt(ball4.getWidth() * ball4.getWidth() + ball4.getHeight() * ball4.getHeight()));
+        ballRadius5 = (float) (0.5 * Math.sqrt(ball5.getWidth() * ball5.getWidth() + ball5.getHeight() * ball5.getHeight()));
+        this.setFocusableInTouchMode(true);
     }
 
     // When view is first created (or changed) set ball's X & Y max and position.
@@ -74,27 +98,35 @@ public class RattleView extends View implements SensorEventListener {
     public void onSizeChanged(int w, int h, int oldW, int oldH) {
         xMax = w - 1;
         yMax = h - 1;
+        if (scaledBackgroundBitmap == null && backgroundBitmap != null)
+            scaledBackgroundBitmap = Bitmap.createBitmap(backgroundBitmap, 0, 0, xMax, yMax);
 
-    }
+        if (scaledBall1 == null) {
+            scaledBall1 = Bitmap.createBitmap(ball1, 0, 0, (int) (ball1.getWidth() * CalculateRatio.HEIGHT_RATIO), (int) (ball1.getHeight() * CalculateRatio.HEIGHT_RATIO));
+        }
+
+        ballRadius1 = (float) (0.5 * Math.sqrt(scaledBall1.getWidth() * scaledBall1.getWidth() + scaledBall1.getHeight() * scaledBall1.getHeight()));
+        ballRadius2 = (float) (0.5 * Math.sqrt(ball2.getWidth() * ball2.getWidth() + ball2.getHeight() * ball2.getHeight()));
+
+    }//end of onSizeChanged
 
     public void onDraw(Canvas canvas) {
-        // Draw ball
-        ballBounds1.set(ballX1 - ballRadius, ballY1 - ballRadius, ballX1 + ballRadius, ballY1 + ballRadius);
-        ballColor1.setColor(Color.GREEN);
-        canvas.drawOval(ballBounds1, ballColor1);
+        canvas.drawBitmap(scaledBackgroundBitmap, 0, 0, paintForBackground);
 
-        ballBounds2.set(ballX2 - ballRadius, ballY2 - ballRadius, ballX2 + ballRadius, ballY2 + ballRadius);
-        ballColor2.setColor(Color.RED);
-        canvas.drawOval(ballBounds2, ballColor2);
-        // Draw enemy
-//        enemyBallBounds.set(enemyX - enemyRadius, enemyY - enemyRadius, enemyX + enemyRadius, enemyY + enemyRadius);
-//        enemyColor.setColor(Color.RED);
-//        canvas.drawOval(enemyBallBounds, enemyColor);
-        // Perform position calculations
+        canvas.drawBitmap(ball1, ballX1, ballY1, paintForBackground);
+        canvas.drawBitmap(ball2, ballX2, ballY2, paintForBackground);
+        // Draw ball
+//        ballBounds1.set(ballX1 - ballRadius, ballY1 - ballRadius, ballX1 + ballRadius, ballY1 + ballRadius);
+//        ballColor1.setColor(Color.GREEN);
+//        canvas.drawOval(ballBounds1, ballColor1);
+//
+//        ballBounds2.set(ballX2 - ballRadius, ballY2 - ballRadius, ballX2 + ballRadius, ballY2 + ballRadius);
+//        ballColor2.setColor(Color.RED);
+//        canvas.drawOval(ballBounds2, ballColor2);
+
         updateBall1();
         updateBall2();
-        //updateEnemy();
-        // Delay for the old human eyes to catch up
+
         try {
             Thread.sleep(3);
         } catch (InterruptedException e) {
@@ -108,23 +140,23 @@ public class RattleView extends View implements SensorEventListener {
         ballY1 += ballSpeedY1;
 
         // Detect Wall Collision on horizontal plane
-        if (ballX1 + ballRadius > xMax) {
+        if (ballX1 + ballRadius1 > xMax) {
             ballSpeedX1 = -ballSpeedX1;
-            ballX1 = xMax - ballRadius;
+            ballX1 = xMax - ballRadius1;
             // enemyWallCollision();
-        } else if (ballX1 - ballRadius < xMin) {
+        } else if (ballX1 - ballRadius1 < xMin) {
             ballSpeedX1 = -ballSpeedX1;
-            ballX1 = xMin + ballRadius;
+            ballX1 = xMin + ballRadius1;
             //  enemyWallCollision();
         }
         // Detect Wall Collision on vertical plane
-        if (ballY1 + ballRadius > yMax) {
+        if (ballY1 + ballRadius1 > yMax) {
             ballSpeedY1 = -ballSpeedY1;
-            ballY1 = yMax - ballRadius;
+            ballY1 = yMax - ballRadius1;
             //enemyWallCollision();
-        } else if (ballY1 - ballRadius < yMin) {
+        } else if (ballY1 - ballRadius1 < yMin) {
             ballSpeedY1 = -ballSpeedY1;
-            ballY1 = yMin + ballRadius;
+            ballY1 = yMin + ballRadius1;
             // enemyWallCollision();
         }
     }
@@ -137,48 +169,48 @@ public class RattleView extends View implements SensorEventListener {
         ballY2 += ballSpeedY2;
 
         // Detect Wall Collision on horizontal plane
-        if (ballX2 + ballRadius > xMax) {
+        if (ballX2 + ballRadius2 > xMax) {
             ballSpeedX2 = -ballSpeedX2;
-            ballX2 = xMax - ballRadius;
+            ballX2 = xMax - ballRadius2;
             // enemyWallCollision();
-        } else if (ballX2 - ballRadius < xMin) {
+        } else if (ballX2 - ballRadius2 < xMin) {
             ballSpeedX2 = -ballSpeedX2;
-            ballX2 = xMin + ballRadius;
+            ballX2 = xMin + ballRadius2;
             //  enemyWallCollision();
         }
         // Detect Wall Collision on vertical plane
-        if (ballY2 + ballRadius > yMax) {
+        if (ballY2 + ballRadius2 > yMax) {
             ballSpeedY2 = -ballSpeedY2;
-            ballY2 = yMax - ballRadius;
+            ballY2 = yMax - ballRadius2;
             //enemyWallCollision();
-        } else if (ballY2 - ballRadius < yMin) {
+        } else if (ballY2 - ballRadius2 < yMin) {
             ballSpeedY2 = -ballSpeedY2;
-            ballY2 = yMin + ballRadius;
+            ballY2 = yMin + ballRadius2;
             // enemyWallCollision();
         }
         float diffX = ballX1 - ballX2;
         float diffY = ballY1 - ballY2;
         // Square root each difference squared
         float diff = (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
-        if (diff <= (ballRadius + ballRadius)) {
+        if (diff <= (ballRadius1 + ballRadius2)) {
 
-            if (ballX2 + ballRadius > ballX1) {
+            if (ballX2 + ballRadius2 > ballX1) {
                 ballSpeedX2 = -ballSpeedX2;
-                ballX2 = (-ballX1 - ballRadius);
+                ballSpeedX1 = -ballSpeedX2;
                 // enemyWallCollision();
-            } else if (ballX2 - ballRadius < ballX1) {
+            } else if (ballX2 - ballRadius2 < ballX1) {
                 ballSpeedX2 = -ballSpeedX2;
-                ballX2 = (-ballX1 + ballRadius);
+                ballSpeedX1 = -ballSpeedX2;
                 //  enemyWallCollision();
             }
             // Detect Wall Collision on vertical plane
-            if (ballY2 + ballRadius > ballY1) {
+            if (ballY2 + ballRadius2 > ballY1) {
                 ballSpeedY2 = -ballSpeedY2;
-                ballY2 = (-ballY1 - ballRadius);
+                ballSpeedY1 = -ballSpeedY2;
                 //enemyWallCollision();
-            } else if (ballY2 - ballRadius < ballY1) {
+            } else if (ballY2 - ballRadius2 < ballY1) {
                 ballSpeedY2 = -ballSpeedY2;
-                ballY2 = (-ballY1 + ballRadius);
+                ballSpeedY1 = -ballSpeedY2;
                 // enemyWallCollision();
             }
         }//end of if

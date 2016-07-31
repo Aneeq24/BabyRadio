@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/seekbarcolor" />
-            <corners android:bottomLeftRadius="@dimen/corner_seekbar" android:bottomRightRadius="@dimen/corner_seekbar" android:topLeftRadius="@dimen/corner_seekbar" android:topRightRadius="@dimen/corner_seekbar"></corners>
 
-        </shape>
-    </item>
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/seekbarcolor" />
+    <corners
+        android:bottomLeftRadius="@dimen/corner_seekbar"
+        android:bottomRightRadius="@dimen/corner_seekbar"
+        android:topLeftRadius="@dimen/corner_seekbar"
+        android:topRightRadius="@dimen/corner_seekbar"></corners>
+
+</shape>

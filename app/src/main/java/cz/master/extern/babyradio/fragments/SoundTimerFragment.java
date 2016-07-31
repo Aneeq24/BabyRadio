@@ -23,6 +23,7 @@ import cn.carbswang.android.numberpickerview.library.NumberPickerView;
 import cz.master.extern.babyradio.R;
 import cz.master.extern.babyradio.helper.BarLevelDrawable;
 import cz.master.extern.babyradio.helper.MicrophoneInput;
+import cz.master.extern.babyradio.helper.PermissionHandler;
 import cz.master.extern.babyradio.helper.SoundTimer;
 import cz.master.extern.babyradio.interfaces.MicrophoneInputListener;
 import cz.master.extern.babyradio.ui.HomeActivity;
@@ -30,7 +31,7 @@ import cz.master.extern.babyradio.ui.HomeActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SoundTimerFragment extends Fragment implements View.OnClickListener, MicrophoneInputListener {
+public class SoundTimerFragment extends Fragment implements View.OnClickListener, MicrophoneInputListener, SeekBar.OnSeekBarChangeListener {
 
 
     private static final String TAG = "Sound Level";
@@ -39,9 +40,11 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         // Required empty public constructor
     }
 
+    int babyMonitorLimit = 100;
+    PermissionHandler permissionHandler;
     BarLevelDrawable mBarLevel;
     MicrophoneInput micInput;  // The micInput object provides real time audio.
-    double mOffsetdB = 0;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
+    double mOffsetdB = 10;  // Offset for bar, i.e. 0 lit LEDs at 10 dB.
     // The Google ASR input requirements state that audio input sensitivity
     // should be set such that 90 dB SPL at 1000 Hz yields RMS of 2500 for
     // 16-bit samples, i.e. 20 * log_10(2500 / mGain) = 90.
@@ -50,11 +53,11 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     double mDifferenceFromNominal = 0.0;
     double mRmsSmoothed;  // Temporally filtered version of RMS.
     double mAlpha = 0.9;  // Coefficient of IIR smoothing filter for RMS.
-    private int mSampleRate=8000;  // The audio sampling rate to use.
-    private int mAudioSource= MediaRecorder.AudioSource.VOICE_RECOGNITION;  // The audio source to use.
+    private int mSampleRate = 16000;  // The audio sampling rate to use.
+    private int mAudioSource = MediaRecorder.AudioSource.DEFAULT;  // The audio source to use.
 
     // Variables to monitor UI update and check for slow updates.
-    private volatile boolean mDrawing=false;
+    private volatile boolean mDrawing = false;
     private volatile int mDrawingCollided;
     //***********************
     View rootView;
@@ -65,7 +68,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     View container_timer_picker, container_timer_text;
     Button Button_TimerStartStop;
     SwitchCompat switch_baby_monitor;
-    SeekBar SensitivityBar;
+    SeekBar SensitivityBar, SensitivityBar_upper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +85,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     *init here findViewby id etc
      */
     private void init() {
+        permissionHandler = new PermissionHandler(getActivity());
         txt_baby_tips_stopwatch = (TextView) rootView.findViewById(R.id.txt_baby_tips_stopwatch);
         txt_baby_tips_clock = (TextView) rootView.findViewById(R.id.txt_baby_tips_clock);
         TipLabel = (TextView) rootView.findViewById(R.id.TipLabel);
@@ -92,6 +96,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         Button_TimerStartStop = (Button) rootView.findViewById(R.id.Button_TimerStartStop);
         switch_baby_monitor = (SwitchCompat) rootView.findViewById(R.id.switch_baby_monitor);
         SensitivityBar = (SeekBar) rootView.findViewById(R.id.SensitivityBar);
+        SensitivityBar_upper = (SeekBar) rootView.findViewById(R.id.SensitivityBar_upper);
         mPickerViewH = (NumberPickerView) rootView.findViewById(R.id.picker_hour);
         mPickerViewM = (NumberPickerView) rootView.findViewById(R.id.picker_minute);
         mPickerViewD = (NumberPickerView) rootView.findViewById(R.id.picker_half_day);
@@ -101,12 +106,15 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         Button_TimerStartStop.setOnClickListener(this);
         switch_baby_monitor.setOnClickListener(this);
         SensitivityBar.setEnabled(switch_baby_monitor.isSelected());
+        SensitivityBar_upper.setEnabled(switch_baby_monitor.isSelected());
+        SensitivityBar.setOnSeekBarChangeListener(this);
+        SensitivityBar_upper.setOnSeekBarChangeListener(this);
+        babyMonitorLimit = SensitivityBar_upper.getProgress();
         //***************************
         mBarLevel = (BarLevelDrawable) rootView.findViewById(R.id.bar_level_drawable_view);
         micInput = new MicrophoneInput(this);
         micInput.setSampleRate(mSampleRate);
         micInput.setAudioSource(mAudioSource);
-        micInput.start();
     }//end of init
 
     /*
@@ -125,9 +133,10 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     }
 
     void initStopWatch() {
-        setData(mPickerViewH, 0, 23, 0);
-        setData(mPickerViewM, 0, 59, 0);
-        setData(mPickerViewD, 0, 1, 0);
+        initTime();
+//        setData(mPickerViewH, 0, 23, 0);
+//        setData(mPickerViewM, 0, 59, 0);
+//        setData(mPickerViewD, 0, 1, 0);
     }
 
     private void setData(NumberPickerView picker, int minValue, int maxValue, int value) {
@@ -147,10 +156,48 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     }//end of getTimeFromPicker
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (switch_baby_monitor.isSelected()) {
+            micInput.start();
+            SensitivityBar.setEnabled(true);
+            SensitivityBar_upper.setEnabled(true);
+        }//end of if
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (switch_baby_monitor.isSelected()) {
+            micInput.stop();
+            SensitivityBar.setEnabled(false);
+            SensitivityBar_upper.setEnabled(false);
+        }//end of if
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.switch_baby_monitor:
+                if (!permissionHandler.isPermissionAvailable(PermissionHandler.RECORD_AUDIO)) {
+                    permissionHandler.requestPermission(PermissionHandler.RECORD_AUDIO);
+                    return;
+                }
+                if (v.isSelected()) {
+                    micInput.stop();
+                    TipLabel.setText(getString(R.string.label_monitor_off_description));
+                    SensitivityBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            SensitivityBar.setProgress(0);
+                        }
+                    }, 100);
+                } else {
+                    TipLabel.setText(getString(R.string.label_monitor_on_description));
+                    micInput.start();
+                }
                 SensitivityBar.setEnabled(!v.isSelected());
+                SensitivityBar_upper.setEnabled(!v.isSelected());
                 v.setSelected(!v.isSelected());
                 break;
             case R.id.txt_baby_tips_stopwatch:
@@ -215,16 +262,20 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                     Button_TimerStartStop.setText("Stop");
                 }//end of if for playing timer
                 else {
-                    TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
-                    Button_TimerStartStop.setText("Start");
-                    container_timer_text.setVisibility(View.GONE);
-                    container_timer_picker.setVisibility(View.VISIBLE);
-                    SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), 10000, Label_TimerCountdown);
-                    soundTimer.resetTimer();
+                    toStopSoundTimer();
                 }
                 break;
         }//end of switch
     }//end of onClick
+
+    public void toStopSoundTimer() {
+        TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
+        Button_TimerStartStop.setText("Start");
+        container_timer_text.setVisibility(View.GONE);
+        container_timer_picker.setVisibility(View.VISIBLE);
+        SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), 10000, Label_TimerCountdown);
+        soundTimer.resetTimer();
+    }
 
     @Override
     public void processAudioFrame(short[] audioFrame) {
@@ -243,12 +294,20 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
             // Set up a method that runs on the UI thread to update of the LED bar
             // and numerical display.
+            SensitivityBar.post(new Runnable() {
+                @Override
+                public void run() {
+                    int level = (int) (((mOffsetdB + rmsdB) / 100) * 100);
+                    SensitivityBar.setProgress(level);
+                    mDrawing = false;
+                }
+            });
             mBarLevel.post(new Runnable() {
                 @Override
                 public void run() {
                     // The bar has an input range of [0.0 ; 1.0] and 10 segments.
                     // Each LED corresponds to 6 dB.
-                    mBarLevel.setLevel((mOffsetdB + rmsdB) / 60);
+                    mBarLevel.setLevel((mOffsetdB + rmsdB) / 100);
 
 //                    DecimalFormat df = new DecimalFormat("##");
 //                    mdBTextView.setText(df.format(20 + rmsdB));
@@ -265,4 +324,37 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                     "than 20ms. Collision count" + Double.toString(mDrawingCollided));
         }
     }//end of function
+
+    public void afterPermsissionGranted() {
+        onClick(switch_baby_monitor);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar == SensitivityBar_upper) {
+            babyMonitorLimit = progress;
+        } else {
+            if (progress > babyMonitorLimit) {
+                performOperationForBabyMonitor();
+            }
+        }
+    }
+
+    /**
+     * This function call when noice increase from user selected
+     */
+    private void performOperationForBabyMonitor() {
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.restartSoundAfterBabyMonitor();
+    }//enmd of funciton
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }//end of fragment
