@@ -14,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.splunk.mint.Mint;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -269,12 +271,16 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     }//end of onClick
 
     public void toStopSoundTimer() {
-        TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
-        Button_TimerStartStop.setText("Start");
-        container_timer_text.setVisibility(View.GONE);
-        container_timer_picker.setVisibility(View.VISIBLE);
-        SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), 10000, Label_TimerCountdown);
-        soundTimer.resetTimer();
+        try {
+            TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
+            Button_TimerStartStop.setText("Start");
+            container_timer_text.setVisibility(View.GONE);
+            container_timer_picker.setVisibility(View.VISIBLE);
+            SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), 10000, Label_TimerCountdown);
+            soundTimer.resetTimer();
+        } catch (Exception e) {
+            Mint.logException(e);
+        }
     }
 
     @Override
