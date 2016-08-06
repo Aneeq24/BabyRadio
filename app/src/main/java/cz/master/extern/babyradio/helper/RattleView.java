@@ -1,13 +1,10 @@
 package cz.master.extern.babyradio.helper;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -192,6 +189,9 @@ public class RattleView extends View implements SensorEventListener {
         return new Point(x, y);
     }
 
+    private int getRandomNumber(int x1Max, int x1Min) {
+        return getRandomVelocity().x;
+    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -263,6 +263,10 @@ public class RattleView extends View implements SensorEventListener {
             //First get the current positions of both sprites
             boolean isCollide = checkForCollision(point1, point2, rectBall1, rectBall2, ball1, ball2);
 //
+            if (isCollide) {
+                sprite1Velocity.negate();
+                sprite2Velocity.negate();
+            }
 
             Point sprite1 = new Point
                     (point1.x,
@@ -288,8 +292,8 @@ public class RattleView extends View implements SensorEventListener {
                 sprite2Velocity.y *= -1;
             }
             if (isCollide) {
-                sprite1.x *= -1;
-                sprite2.x *= -1;
+//                sprite1.x *= -1;
+//                sprite2.x *= -1;
             }
             setSprite1(sprite1.x,
                     sprite1.y);
@@ -312,19 +316,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite2Bounds.width(), sprite2.y + sprite2Bounds.height());
         Rect r3 = new Rect(r1);
         if (r1.intersect(r2)) {
-            for (int i = r1.left; i < r1.right; i++) {
-                for (int j = r1.top; j < r1.bottom; j++) {
-                    if (bm1.getPixel(i - r3.left, j - r3.top) !=
-                            Color.TRANSPARENT) {
-                        if (bm2.getPixel(i - r2.left, j - r2.top) !=
-                                Color.TRANSPARENT) {
-                            lastCollision = new Point(sprite2.x +
-                                    i - r2.left, sprite2.y + j - r2.top);
-                            return true;
-                        }
-                    }
-                }
-            }
+            return true;
         }
         lastCollision = new Point(-1, -1);
         return false;
