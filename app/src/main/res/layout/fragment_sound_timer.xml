@@ -20,7 +20,6 @@
             android:layout_height="match_parent"
             android:layout_weight="50"
             android:background="@drawable/btn_baby_tips_selector"
-            android:fontFamily="serif-monospace"
             android:gravity="center"
             android:text="Stopwatch"
             android:textColor="@color/txt_babytips_selector"
@@ -137,10 +136,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:paddingLeft="14dp"
+        app:buttonTint="@color/toggle_color"
+        app:buttonTintMode="src_over"
         android:paddingRight="14dp"
         android:text="Baby Monitor"
         android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:checked="false" />
 
     <RelativeLayout
         android:id="@+id/MonitorGroup"
@@ -199,18 +201,19 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:gravity="center"
+            android:gravity="left"
             android:minLines="3"
             android:text="@string/label_monitor_off_description" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/Button_TimerStartStop"
-        android:layout_width="229dp"
-        android:layout_height="37dp"
+        android:layout_width="70dp"
+        android:layout_height="24dp"
         android:layout_gravity="center"
+        android:shadowColor="@android:color/transparent"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/btn_start_stop_timer_selector"
+        android:background="@drawable/btn_play_pause_selector"
         android:text="Start"
         android:textColor="#ffffff" />
 </LinearLayout>

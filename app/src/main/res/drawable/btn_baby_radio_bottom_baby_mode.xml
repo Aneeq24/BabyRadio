@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="@dimen/corner_play_pause" android:bottomRightRadius="@dimen/corner_play_pause" android:topLeftRadius="@dimen/corner_play_pause" android:topRightRadius="@dimen/corner_play_pause"></corners>
+            <solid android:color="@color/btn_baby_radio_bottom_sound_timer" />
+            <size android:width="150dp" android:height="20dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="@dimen/corner_play_pause" android:bottomRightRadius="@dimen/corner_play_pause" android:topLeftRadius="@dimen/corner_play_pause" android:topRightRadius="@dimen/corner_play_pause"></corners>
+            <solid android:color="@color/btn_baby_radio_bottom_baby_mode" />
+            <size android:width="150dp" android:height="20dp" />
+        </shape>
+    </item>
+</selector>

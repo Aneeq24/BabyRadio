@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cz.master.extern.babyradio.R;
+import cz.master.extern.babyradio.helper.Fonts;
 
 /**
  * Created by Yasir Iqbal on 7/17/2016.
@@ -49,6 +50,7 @@ public class LogAdopter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.Icon = (ImageView) convertView.findViewById(R.id.Icon);
             viewHolder.Label = (TextView) convertView.findViewById(R.id.Label);
+            viewHolder.Label.setTypeface(Fonts.getUbuntuRegularTypeFace());
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }

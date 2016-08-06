@@ -7,14 +7,21 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.Random;
 
 import cz.master.extern.babyradio.R;
 import cz.master.extern.babyradio.ratioresolver.CalculateRatio;
@@ -26,11 +33,10 @@ public class RattleView extends View implements SensorEventListener {
     private int yMin = 0;
     private int xMax;
     private int yMax;
-    // Ball attributes 1
-    private float ballRadius = 30;
+
     private float ballX1 = 50;
     private float ballY1 = 50;
-    private float ballSpeedX1 = 7;
+    private float ballSpeedX1 = 3;
     private float ballSpeedY1 = 4;
     private float maxSpeed = 20;
     private RectF ballBounds1;
@@ -72,6 +78,12 @@ public class RattleView extends View implements SensorEventListener {
     Bitmap scaledBall1, scaledBall2, scaledBall3, scaledBall4, scaledBall5;
     private float ballRadius1, ballRadius2, ballRadius3, ballRadius4, ballRadius5;
 
+    private int sprite1Rotation = 0;
+    public Rect rectBall1, rectBall2, rectBall3, rectBall4, rectBall5;
+    public Point point1, point2, point3, point4, point5, point6, point7;
+    public Matrix matrix1, matrix2, matrix3, matrix4;
+    private Point lastCollision;
+
     public RattleView(Context context) {
         super(context);
         // Initialize game elements
@@ -97,7 +109,12 @@ public class RattleView extends View implements SensorEventListener {
         ballRadius4 = (float) (0.5 * Math.sqrt(ball4.getWidth() * ball4.getWidth() + ball4.getHeight() * ball4.getHeight()));
         ballRadius5 = (float) (0.5 * Math.sqrt(ball5.getWidth() * ball5.getWidth() + ball5.getHeight() * ball5.getHeight()));
         this.setFocusableInTouchMode(true);
-    }
+        rectBall1 = new Rect(0, 0, ball1.getWidth(), ball1.getHeight());
+        rectBall2 = new Rect(0, 0, ball2.getWidth(), ball2.getHeight());
+        point1 = new Point(-1, -1);
+        point2 = new Point(-1, -1);
+        matrix1 = new Matrix();
+    }//end of function
 
     // When view is first created (or changed) set ball's X & Y max and position.
     @Override
@@ -116,9 +133,15 @@ public class RattleView extends View implements SensorEventListener {
         if (scaledBall2 == null) {
             scaledBall2 = Bitmap.createBitmap(ball1, 0, 0, (int) (ball2.getWidth() * CalculateRatio.HEIGHT_RATIO), (int) (ball2.getHeight() * CalculateRatio.HEIGHT_RATIO));
         }
-        ballRadius1 = (float) (0.5 * Math.sqrt(scaledBall1.getWidth() * scaledBall1.getWidth() + scaledBall1.getHeight() * scaledBall1.getHeight()));
-        ballRadius2 = (float) (0.5 * Math.sqrt(ball2.getWidth() * ball2.getWidth() + ball2.getHeight() * ball2.getHeight()));
-
+        ballRadius1 = ball1.getWidth();//float) (0.5 * Math.sqrt(scaledBall1.getWidth() * scaledBall1.getWidth() + scaledBall1.getHeight() * scaledBall1.getHeight()));
+        ballRadius2 = ball2.getWidth();//(float) (0.5 * Math.sqrt(ball2.getWidth() * ball2.getWidth() + ball2.getHeight() * ball2.getHeight()));
+        Handler hn = new Handler();
+        hn.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initGfx();
+            }
+        }, 0);
     }//end of onSizeChanged
 
     public void onDraw(Canvas canvas) {
@@ -127,292 +150,48 @@ public class RattleView extends View implements SensorEventListener {
         else {
             canvas.drawBitmap(backgroundBitmap, 0, 0, paintForBackground);
         }
-        canvas.drawBitmap(ball1, ballX1, ballY1, paintForBackground);
-        canvas.drawBitmap(ball2, ballX2, ballY2, paintForBackground);
-        canvas.drawBitmap(ball3, ballX3, ballY3, paintForBackground);
-        // Draw ball
-//        ballBounds1.set(ballX1 - ballRadius, ballY1 - ballRadius, ballX1 + ballRadius, ballY1 + ballRadius);
-//        ballColor1.setColor(Color.GREEN);
-//        canvas.drawOval(ballBounds1, ballColor1);
-//
-//        ballBounds2.set(ballX2 - ballRadius, ballY2 - ballRadius, ballX2 + ballRadius, ballY2 + ballRadius);
-//        ballColor2.setColor(Color.RED);
-//        canvas.drawOval(ballBounds2, ballColor2);
+        matrix1.reset();
+        matrix1.postTranslate((float) (point1.x), (float) (point1.y));
+        matrix1.postRotate(sprite1Rotation,
+                (float) (point1.x + rectBall1.width() / 2.0),
+                (float) (point1.y + rectBall1.width() / 2.0));
+        canvas.drawBitmap(ball1, matrix1, null);
 
-        updateBall1();
-        updateBall2();
-        updateBall3();
-        try {
-            Thread.sleep(3);
-        } catch (InterruptedException e) {
-        }
-        invalidate();
-    }
+        sprite1Rotation += 3;
+        canvas.drawBitmap(ball2, point2.x, point2.y, null);
 
-    public void updateBall1() {
-        // ball x & y change based on ball speed
-        ballX1 += ballSpeedX1;
-        ballY1 += ballSpeedY1;
-
-        // Detect Wall Collision on horizontal plane
-        if (ballX1 + ballRadius1 > xMax) {
-            ballSpeedX1 = -ballSpeedX1;
-            ballX1 = xMax - ballRadius1;
-            // enemyWallCollision();
-        } else if (ballX1 - ballRadius1 < xMin) {
-            ballSpeedX1 = -ballSpeedX1;
-            ballX1 = xMin + ballRadius1;
-            //  enemyWallCollision();
-        }
-        // Detect Wall Collision on vertical plane
-        if (ballY1 + ballRadius1 > yMax) {
-            ballSpeedY1 = -ballSpeedY1;
-            ballY1 = yMax - ballRadius1;
-            //enemyWallCollision();
-        } else if (ballY1 - ballRadius1 < yMin) {
-            ballSpeedY1 = -ballSpeedY1;
-            ballY1 = yMin + ballRadius1;
-            // enemyWallCollision();
-        }
-    }
-
-    //******
-
-    public void updateBall2() {
-        // ball x & y change based on ball speed
-        ballX2 += ballSpeedX2;
-        ballY2 += ballSpeedY2;
-
-        // Detect Wall Collision on horizontal plane
-        if (ballX2 + ballRadius2 > xMax) {
-            ballSpeedX2 = -ballSpeedX2;
-            ballX2 = xMax - ballRadius2;
-            // enemyWallCollision();
-        } else if (ballX2 - ballRadius2 < xMin) {
-            ballSpeedX2 = -ballSpeedX2;
-            ballX2 = xMin + ballRadius2;
-            //  enemyWallCollision();
-        }
-        // Detect Wall Collision on vertical plane
-        if (ballY2 + ballRadius2 > yMax) {
-            ballSpeedY2 = -ballSpeedY2;
-            ballY2 = yMax - ballRadius2;
-            //enemyWallCollision();
-        } else if (ballY2 - ballRadius2 < yMin) {
-            ballSpeedY2 = -ballSpeedY2;
-            ballY2 = yMin + ballRadius2;
-            // enemyWallCollision();
-        }
-        float diffX = ballX1 - ballX2;
-        float diffY = ballY1 - ballY2;
-        // Square root each difference squared
-        float diff = (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
-        if (diff <= (ballRadius1 + ballRadius2)) {
-
-            if (ballX2 + ballRadius2 > ballX1) {
-                ballSpeedX2 = -ballSpeedX2;
-                ballSpeedX1 = -ballSpeedX1;
-                // enemyWallCollision();
-            } else if (ballX2 - ballRadius2 < ballX1) {
-                ballSpeedX2 = -ballSpeedX2;
-                ballSpeedX1 = -ballSpeedX1;
-                //  enemyWallCollision();
-            }
-            // Detect Wall Collision on vertical plane
-            if (ballY2 + ballRadius2 > ballY1) {
-                ballSpeedY2 = -ballSpeedY2;
-                ballSpeedY1 = -ballSpeedY1;
-                //enemyWallCollision();
-            } else if (ballY2 - ballRadius2 < ballY1) {
-                ballSpeedY2 = -ballSpeedY2;
-                ballSpeedY1 = -ballSpeedY1;
-                // enemyWallCollision();
-            }
-        }//end of if
-    }
-
-    public void updateBall3() {
-        // ball x & y change based on ball speed
-        ballX3 += ballSpeedX3;
-        ballY3 += ballSpeedY3;
-
-        // Detect Wall Collision on horizontal plane
-        if (ballX3 + ballRadius3 > xMax) {
-            ballSpeedX3 = -ballSpeedX3;
-            ballX3 = xMax - ballRadius3;
-            // enemyWallCollision();
-        } else if (ballX3 - ballRadius3 < xMin) {
-            ballSpeedX3 = -ballSpeedX3;
-            ballX3 = xMin + ballRadius3;
-            //  enemyWallCollision();
-        }
-        // Detect Wall Collision on vertical plane
-        if (ballY3 + ballRadius3 > yMax) {
-            ballSpeedY3 = -ballSpeedY3;
-            ballY3 = yMax - ballRadius3;
-            //enemyWallCollision();
-        } else if (ballY3 - ballRadius3 < yMin) {
-            ballSpeedY3 = -ballSpeedY3;
-            ballY3 = yMin + ballRadius3;
-            // enemyWallCollision();
-        }
-        float diffX = ballX1 - ballX3;
-        float diffY = ballY1 - ballY3;
-        // Square root each difference squared
-        float diff = (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
-        if (diff <= (ballRadius1 + ballRadius3)) {
-
-            if (ballX3 + ballRadius3 > ballX1) {
-                ballSpeedX3 = -ballSpeedX3;
-                ballSpeedX1 = -ballSpeedX1;
-                // enemyWallCollision();
-            } else if (ballX3 - ballRadius3 < ballX1) {
-                ballSpeedX3 = -ballSpeedX3;
-                ballSpeedX1 = -ballSpeedX1;
-                //  enemyWallCollision();
-            }
-            // Detect Wall Collision on vertical plane
-            if (ballY3 + ballRadius3 > ballY1) {
-                ballSpeedY3 = -ballSpeedY3;
-                ballSpeedY1 = -ballSpeedY1;
-                //enemyWallCollision();
-            } else if (ballY3 - ballRadius3 < ballY1) {
-                ballSpeedY3 = -ballSpeedY3;
-                ballSpeedY1 = -ballSpeedY1;
-                // enemyWallCollision();
-            }
-        }//end of if
-    }
-
-    public void updateEnemy() {
-
-        // Update position
-        enemyX += enemySpeedX;
-        enemyY += enemySpeedY;
-        // Detect wall collision and react
-        if (enemyX + enemyRadius > xMax) {
-            enemySpeedX = -enemySpeedX;
-            enemyX = xMax - enemyRadius;
-            enemyWallCollision();
-        } else if (enemyX - enemyRadius < xMin) {
-            enemySpeedX = -enemySpeedX;
-            enemyX = xMin + enemyRadius;
-            enemyWallCollision();
-        }
-        if (enemyY + enemyRadius > yMax) {
-            enemySpeedY = -enemySpeedY;
-            enemyY = yMax - enemyRadius;
-            enemyWallCollision();
-        } else if (enemyY - enemyRadius < yMin) {
-            enemySpeedY = -enemySpeedY;
-            enemyY = yMin + enemyRadius;
-            enemyWallCollision();
-        }
-        // Check for ball collisions: help ==> http://devmag.org.za/2009/04/13/basic-collision-detection-in-2d-part-1/
-        // Calculate how far centers of circle are from one another
-        float diffX = ballX1 - enemyX;
-        float diffY = ballY1 - enemyY;
-        // Square root each difference squared
-        float diff = (float) Math.sqrt((diffX * diffX) + (diffY * diffY));
-        if (diff <= (ballRadius + enemyRadius)) {
-            ballCollision(this);
-        }
     }
 
     // Touch-input handler
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        float currentX = event.getX();
-//        float currentY = event.getY();
-//        float deltaX, deltaY;
-//        float scalingFactor = scalor / ((xMax > yMax) ? yMax : xMax);
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_MOVE:
-//                deltaX = currentX - previousX;
-//                deltaY = currentY - previousY;
-//                ballSpeedX1 += deltaX * scalingFactor;
-//                ballSpeedY1 += deltaY * scalingFactor;
-//        }
-//        // reset to max speed if over
-//        radarGun();
-//
-//        // Save current x, y
-//        previousX = currentX;
-//        previousY = currentY;
         return true;
     }
 
-    public void ballCollision(View view) {
-        pauseBalls();
-        // Alert Dialog
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-        alertDialog.setTitle("Crash!");
-        alertDialog.setMessage("Pick yourself up grasshopper.").setCancelable(false);
-        alertDialog.setPositiveButton("Restart...", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-//				Context context = getContext();
-//				Intent intent = new Intent(context, Level1.class);
-//				context.startActivity(intent);
-
-            }
-        });
-        alertDialog.show();
+    private Point getRandomVelocity() {
+        Random r = new Random();
+        int min = 1;
+        int max = 5;
+        int x = r.nextInt(max - min + 1) + min;
+        int y = r.nextInt(max - min + 1) + min;
+        return new Point(x, y);
     }
 
-    public void enemyWallCollision() {
-        scalor += .4;
-        float increment = .2f;
-        if (enemySpeedX >= 0) {
-            enemySpeedX += increment;
-        } else {
-            enemySpeedX -= increment;
-        }
-        if (enemySpeedY >= 0) {
-            enemySpeedX += increment;
-        } else {
-            enemySpeedY -= increment;
-        }
+    private Point getRandomPoint() {
+        Random r = new Random();
+        int minX = 0;
+        int maxX = getWidth() -
+                rectBall1.width();
+        int x = 0;
+        int minY = 0;
+        int maxY = getHeight() -
+                rectBall1.height();
+        int y = 0;
+        x = r.nextInt(maxX - minX + 1) + minX;
+        y = r.nextInt(maxY - minY + 1) + minY;
+        return new Point(x, y);
     }
 
-    public void radarGun() {
-        if (ballSpeedX1 > 0) {
-            ballSpeedX1 = ((ballSpeedX1 > maxSpeed) ? maxSpeed : ballSpeedX1);
-        } else if (ballSpeedX1 < 0) {
-            ballSpeedX1 = ((ballSpeedX1 < -maxSpeed) ? -maxSpeed : ballSpeedX1);
-        }
-        if (ballSpeedY1 > 0) {
-            ballSpeedY1 = ((ballSpeedY1 > maxSpeed) ? maxSpeed : ballSpeedY1);
-        } else if (ballSpeedX1 < 0) {
-            ballSpeedY1 = ((ballSpeedY1 < -maxSpeed) ? -maxSpeed : ballSpeedY1);
-        }
-    }
-
-    public void resetBalls() {
-        ballRadius = 30;
-        ballX1 = ballRadius;
-        ballY1 = ballRadius;
-        ballSpeedX1 = 3;
-        ballSpeedY1 = 5;
-        enemyRadius = ballRadius;
-        enemyX = xMax / 3;
-        enemyY = yMax / 3;
-        enemySpeedX = 5;
-        enemySpeedY = 3;
-    }
-
-    public void pauseBalls() {
-        ballRadius = 0;
-        ballX1 = ballRadius;
-        ballY1 = ballRadius;
-        ballSpeedX1 = 0;
-        ballSpeedY1 = 0;
-        enemyRadius = ballRadius;
-        enemyX = 500;
-        enemyY = 500;
-        enemySpeedX = 0;
-        enemySpeedY = 0;
-    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -426,4 +205,129 @@ public class RattleView extends View implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }//end of onAccuracyChanged
-}
+
+    private Handler frame = new Handler();
+    //Velocity includes the speed and the direction of our sprite motion
+    private Point sprite1Velocity;
+    private Point sprite2Velocity;
+    private int sprite1MaxX;
+    private int sprite1MaxY;
+    private int sprite2MaxX;
+    private int sprite2MaxY;
+    //Divide the frame by 1000 to calculate how many times per second the screen will update.
+    private static final int FRAME_RATE = 10; //50 frames per second
+
+    synchronized public void initGfx() {
+        //Select two random points for our initial sprite placement.
+        //The loop is just to make sure we don't accidentally pick
+        //two points that overlap.
+        Point p1, p2;
+        do {
+            p1 = getRandomPoint();
+            p2 = getRandomPoint();
+        } while (Math.abs(p1.x - p2.x) <
+                rectBall1.width());
+        setSprite1(p1.x, p1.y);
+        setSprite2(p2.x, p2.y);
+        //Give the asteroid a random velocity
+        sprite1Velocity = getRandomVelocity();
+        //Fix the ship velocity at a constant speed for now
+        sprite2Velocity = new Point(1, 1);
+        //Set our boundaries for the sprites
+        sprite1MaxX = getWidth() -
+                rectBall1.width();
+        sprite1MaxY = getHeight() -
+                rectBall1.height();
+        sprite2MaxX = getWidth() -
+                rectBall2.width();
+        sprite2MaxY = getHeight() -
+                rectBall2.height();
+        frame.removeCallbacks(frameUpdate);
+        frame.postDelayed(frameUpdate, FRAME_RATE);
+    }
+
+    private void setSprite2(int x, int y) {
+        point2.x = x;
+        point2.y = y;
+    }
+
+    private void setSprite1(int x, int y) {
+        point1.x = x;
+        point1.y = y;
+    }
+
+    private Runnable frameUpdate = new Runnable() {
+        @Override
+        synchronized public void run() {
+            frame.removeCallbacks(frameUpdate);
+            //First get the current positions of both sprites
+            boolean isCollide = checkForCollision(point1, point2, rectBall1, rectBall2, ball1, ball2);
+//
+
+            Point sprite1 = new Point
+                    (point1.x,
+                            (point1.y));
+            Point sprite2 = new Point
+                    (point2.x, point2.y);
+            //Now calc the new positions.
+            //Note if we exceed a boundary the direction of the velocity gets reversed.
+            sprite1.x = sprite1.x + sprite1Velocity.x;
+            if (sprite1.x > sprite1MaxX || sprite1.x < 5) {
+                sprite1Velocity.x *= -1;
+            }
+            sprite1.y = sprite1.y + sprite1Velocity.y;
+            if (sprite1.y > sprite1MaxY || sprite1.y < 5) {
+                sprite1Velocity.y *= -1;
+            }
+            sprite2.x = sprite2.x + sprite2Velocity.x;
+            if (sprite2.x > sprite2MaxX || sprite2.x < 5) {
+                sprite2Velocity.x *= -1;
+            }
+            sprite2.y = sprite2.y + sprite2Velocity.y;
+            if (sprite2.y > sprite2MaxY || sprite2.y < 5) {
+                sprite2Velocity.y *= -1;
+            }
+            if (isCollide) {
+                sprite1.x *= -1;
+                sprite2.x *= -1;
+            }
+            setSprite1(sprite1.x,
+                    sprite1.y);
+            setSprite2(sprite2.x, sprite2.y);
+            invalidate();
+            frame.postDelayed(frameUpdate, FRAME_RATE);
+        }
+    };//end of hanndler
+
+    private void afterCollide() {
+
+    }
+
+    private boolean checkForCollision(Point sprite1, Point sprite2, Rect sprite1Bounds, Rect sprite2Bounds, Bitmap bm1, Bitmap bm2) {
+        if (sprite1.x < 0 && sprite2.x < 0 && sprite1.y < 0 && sprite2.y < 0)
+            return false;
+        Rect r1 = new Rect(sprite1.x, sprite1.y, sprite1.x
+                + sprite1Bounds.width(), sprite1.y + sprite1Bounds.height());
+        Rect r2 = new Rect(sprite2.x, sprite2.y, sprite2.x +
+                sprite2Bounds.width(), sprite2.y + sprite2Bounds.height());
+        Rect r3 = new Rect(r1);
+        if (r1.intersect(r2)) {
+            for (int i = r1.left; i < r1.right; i++) {
+                for (int j = r1.top; j < r1.bottom; j++) {
+                    if (bm1.getPixel(i - r3.left, j - r3.top) !=
+                            Color.TRANSPARENT) {
+                        if (bm2.getPixel(i - r2.left, j - r2.top) !=
+                                Color.TRANSPARENT) {
+                            lastCollision = new Point(sprite2.x +
+                                    i - r2.left, sprite2.y + j - r2.top);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        lastCollision = new Point(-1, -1);
+        return false;
+    }
+
+}//end of class

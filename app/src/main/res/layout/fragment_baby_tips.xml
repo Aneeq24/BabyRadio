@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cz.master.extern.babyradio.fragments.BabyTipsFragment">
+
+    <LinearLayout
+        android:layout_width="@dimen/container_babytips_top_btns_width"
+        android:layout_height="@dimen/container_babytips_top_btns_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/container_babytips_top_btns_top_margin"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/txt_baby_tips_sleeping"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@drawable/btn_baby_tips_selector"
+            android:gravity="center"
+            android:text="Sleeping"
+            android:textColor="@color/txt_babytips_selector"
+            android:textSize="@dimen/txt_baby_btns_top_textsize" />
+
+        <TextView
+            android:id="@+id/txt_baby_tips_safety"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@drawable/btn_baby_tips_selector_right"
+            android:gravity="center"
+            android:text="Safety"
+            android:textColor="@color/txt_babytips_selector"
+            android:textSize="@dimen/txt_baby_btns_top_textsize" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_babytips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/viewpager_babytips_padding_left_right"
+            android:paddingRight="@dimen/viewpager_babytips_padding_left_right" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_babytips_safety"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/viewpager_babytips_padding_left_right"
+            android:paddingRight="@dimen/viewpager_babytips_padding_left_right"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img_baby_tips_ic_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/ic_left" />
+
+        <ImageView
+            android:id="@+id/img_baby_tips_ic_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_right" />
+    </FrameLayout>
+</LinearLayout>

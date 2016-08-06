@@ -1,0 +1,240 @@
+<resources>
+    <string name="app_name">Baby Radio</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="sleeping_tip_1">
+        <item>Routine</item>
+        <item>Humans are creatures of habit, habits and rituals make our days easier so we can focus on the really important things. Creating a daily routine not only for your child, but also for yourself creates a bond unlike any other. The routine you set up for your family give your days meaning and give your children something to look forward to.
+	As significant as a daily routine may be, having a bedtime ritual seems even more important. You feed your baby, give them a loving bath, put on pajamas or swaddle your little one so they feel safe. Then you perhaps sing a lullaby or tell a short story and cuddle for a little while. You will have a sleeping baby on your hands in no time if you follow this ritual every night.
+</item>
+    </string-array>
+    <string-array name="sleeping_tip_2">
+        <item>Use lighting to your advantage</item>
+        <item>When your bundle of joy was still in the womb, the lights were dim. Keep these conditions in mind when putting your child to sleep. The world is still a new place, so any added distraction is sure to keep them awake!
+	Your baby should get plenty of light during the day and be in relative darkness during the night. The concept of changing day and night is ungraspable for a newborn who needs to sleep up to 20 hours a day. The sooner you start distinguishing between the two, the sooner your baby starts sleeping through the night. For naps during the day, it is generally better to not have total darkness in the room your child is sleeping in.
+</item>
+    </string-array>
+    <string-array name="sleeping_tip_3">
+        <item>Put to bed when drowsy</item>
+        <item>A good idea is to put your child to bed when you can tell they are slowly dozing off, but still not completely asleep. You will soon find that you can tell simply by looking at them when your little ones are tired. They might start rubbing their eyes, tugging on their ears, yawning or being fussy.
+	If you pay attention to your child‘s sleeping patterns and the tell tale signs they are tired, you have almost won. Letting fresh air into the baby‘s room, closing the curtains to shield the room from direct sunlight, singing a lullaby and offering reassurance when needed. These are some of the steps to a happy sleeper.
+</item>
+    </string-array>
+    <string-array name="sleeping_tip_4">
+        <item>Don’t overtire your baby</item>
+        <item>Be careful to not overtire your baby too much. If a baby has gone too long without a nap, they might get fussy and whiny and the harder it becomes to actually fall asleep. An overtired baby will need lots of sensory soothing strategies to settle to sleep, particularly if they are already crying. These include swaddling, rocking your baby, playing white noise or just holding your little one until they become drowsy and sleepy. It‘s important to track sleep patterns and avoid these situations as they are stressful for the baby and also for yourself.
+        </item>
+    </string-array>
+    <string-array name="sleeping_tip_5">
+        <item>Manage naps</item>
+        <item>Keeping track of naps and snacks can be very useful during the first few months of being a new parent. It can help you monitor how much your child is eating and how the weight gain is going and it helps to establish sleeping patterns. Keep track of how long and when your baby slept and find a pattern that works for longer sleeps during the night. This works best with older children but starting training early has never hurt anyone.
+	 The most important thing is to try to not get discouraged if you daytime pattern is erratic sometimes. Getting used to your baby and being able to meet all his needs takes some skills and experience along with heaps of time.
+</item>
+    </string-array>
+    <string-array name="sleeping_tip_6">
+        <item>Feeding before sleep time</item>
+        <item>For adults, having some time pass between the last meal and going to bed is important for a healthy night‘s sleep. For a newborn, the need to eat is constant. This need for a heaping helping decreases over time and babies older than six months should be able to sleep through the night without waking up to fill their bellies. To guarantee a restful slumber, you should incorporate breastfeeding or the bottle into your bedtime routine. Even if your baby drinks two or three gulps, it might mean a couple more hours of sleep straight till morning.
+        </item>
+    </string-array>
+
+    <string-array name="sleeping_tip_7">
+        <item>Day feedings</item>
+        <item>Tanking up with frequent feedings during the day is a great way to combat your little one waking up in the middle of the night demanding his share. As babies get bigger, they get busier during the days and forget to eat. Who wouldn‘t when you have the whole world to explore?
+	It is your responsibility (and even for your own good) to keep track of their feeding schedule and stick to it. The routine in sleeping and feeding is crucial for their development and help you plan your days so you spend as much time as possible with your little one.
+</item>
+    </string-array>
+
+    <string-array name="sleeping_tip_8">
+        <item>Don‘t panic with every rustle</item>
+        <item>Baby monitors are a godsend. Having some time for yourself without the need to constantly keep an eye out on you sleeping angel is amazing. Of course you never want your young one to experience any discomfort but letting them sort it out on their own first is the number one step in establishing their sleeping independence.
+	The rule is to not jump up with every squeak and rustle coming from the baby monitor. If you hear rumbling, wait a few minutes and let your little one handle it. You‘ll soon find that even if your child wakes up, they settle down and fall asleep immediately after a few minutes. Rushing to their side only makes your child wake up more often and demand your attention.
+</item>
+    </string-array>
+
+    <string-array name="sleeping_tip_9">
+        <item>Turn monitor sensivity down</item>
+        <item>If the sounds coming from the monitor make you uneasy, you can try turning the sensitivity down a little, so only louder sounds get through. This will get rid of all those soft whimpers and sounds of the baby turning while still allowing you to hear when your child is experiencing actual discomfort or crying. But often times, your baby will wake up, babble or cry very briefly and still be asleep. Give the baby some time and see if they’ll resettle themselves. If they learn to calm themselves down, it means more time you can spend playing or cuddling – and that’s worth it!
+        </item>
+    </string-array>
+
+    <string-array name="sleeping_tip_10">
+        <item>Nursing during the night</item>
+        <item>If your little one wakes up during the night hungry, you should feed them in relative darkness with the lights dimmed. It is also better if you talk in a low voice and make little eye-contact. You want to limit your interactions so your baby doesn‘t feel like it‘s wake up time. During the night, burping after a hefty share of milk may seem like and impossible task. Although babies nurse less anxiously during the night swallowing less air, it still might be necessary to let the air out. In this case, you don‘t have to pick you little one up. Simply put them on your side and give their backs a few pats. That should do the trick!
+        </item>
+    </string-array>
+    <string-array name="sleeping_tip_11">
+        <item>Go outside</item>
+        <item>You need to be aware that in the first few weeks, babies tend to sleep an awful lot and their habits tend to change week to week so you need to be open to change. Try to go out at least once during the day so your darling can experience some sunlight and new sounds and smells.
+You’ll get as much from this experience as your little one. Active relaxation helps fight depression and gets your energy going. For the baby, sleeping in a pram is every bit as valuable as sleeping at home in a crib. Rock the pram and don‘t worry about your baby sleeping outside – it might even be beneficial!
+</item>
+    </string-array>
+    <string-array name="safety_tip_1">
+        <item>Daytime is tummy time</item>
+        <item>Newborns and babies in general spend more time asleep than awake. It‘s important to make sure you as a parent are doing everything possible to grant the safest environment in which they can dream.\n
+	All babies should always sleep on their back only to reduce the risk of SIDS (sudden infant death syndrome). Sleeping on the side and stomach is not advised. When they are awake, that‘s a completely different story. Awake means a lot of exploring so babies should be able to move as much as they want during wake time, but always under supervision. Tummy time during the day will help your little one to strengthen neck muscles and avoid flat spots on you angel‘s head.
+</item>
+    </string-array>
+    <string-array name="safety_tip_2">
+        <item>Sleeping surface</item>
+        <item>This may seem like the opposite of what you‘re thinking – but you should not leave anything soft in the crib with your baby. Your precious little one is delicate and you should keep that in mind when putting them to sleep in their crib. The baby should always sleep on a firm mattress covered in a fitted bed sheet. The mattress should be fitted to the crib and there shouldn‘t be any extra room around the perimeter of the mattress so the baby does not get caught between the crib and the mattress. You should always use an original mattress for your crib.
+        </item>
+    </string-array>
+    <string-array name="safety_tip_3">
+        <item>Nothing in the crib</item>
+        <item>Blankets and pillows should be reserved for older children where you don‘t risk any serious damage if the blanket got over your little one‘s head. If you‘re worried about keeping your child warm, simply use a swaddling technique or a wearable blanket – a sleep sack.\n
+	Stuffed animals are a great gift and you will be receiving a lot of stuffed animals and other stuffed soft toys from your relatives. To play with them is great and highly encouraged, but you shouldn‘t leave the toys with your child in their crib. They do give out the vibe of coziness and warmth but they can often do more harm than good.
+</item>
+    </string-array>
+    <string-array name="safety_tip_4">
+        <item>To each his own bed</item>
+        <item>Having your little loved one close is a top priority to build up the bond between the two of you. Your baby can feel your presence and knows that you are there for their well-being. Place your baby to sleep in the same room where you sleep, preferably close to your own bed for your own comfort. You should sleep in the same room, but you shouldn’t share the same bed. The baby should sleep on a firm surface without any blankets or pillows and if they sleep in the same bed as you, you risk that they can get tangled in your bedsheets or covers.
+        </item>
+    </string-array>
+    <string-array name="safety_tip_5">
+        <item>An arm’s length away</item>
+        <item>It may seem impossible in the first few months – it is tiresome caring for a small baby and when you breastfeed or feed from a bottle in the middle of the night, the last thing you want to do is to get up and place your baby in their crib. But the safety of your child is always the priority. So keep the crib at an arm’s length from your own bed so feeding or simply watching your child becomes harmless while you still enjoy each others company.
+        </item>
+    </string-array>
+    <string-array name="safety_tip_6">
+        <item>Make sure your crib is up to date</item>
+        <item>Check that your crib meets safety standards of associations and make sure it has all the right pieces. Your child will spend endless hours sleeping, mainly in their crib, so it should be in perfect condition. The slats of the crib should be close together so your loved one isn’t under threat of getting stuck between them. You should make sure that there are no sharp cutouts on the headboard and that all the pieces are original. You should always leave the repairs up to a professional, making changes to the crib yourself can result in dangerous scenarios.
+        </item>
+    </string-array>
+
+    <string-array name="safety_tip_7">
+        <item>Watch the temperature</item>
+        <item>Keep the room where your baby sleeps at a comfortable temperature, this goes for babies as well as adults. You should generally sleep in an environment that is a little colder than during the day. Dress your baby in no more than one extra layer than you would wear. Your baby may be too hot if they are sweating or if their chest feels hot. If you are worried that your baby is cold, you can use a wearable blanket or the swaddle technique. The ideal temperature for babies to sleep in should be somewhere between 65 – 70 °F.
+        </item>
+    </string-array>
+
+    <string-array name="safety_tip_8">
+        <item>Keep the crib safe</item>
+        <item>Room-sharing is the way to go. But how do you choose where the crib goes in your room? It’s quite easy. Don’t place the crib near windows, especially with draperies or blinds. You also shouldn’t put the crib near the doors so your baby doesn’t experience the draft. Having a playpen hanging above your little one’s crib can be very soothing to them and they will stare at the moving objects with great intensity. But be careful when using a string or a chord to hang it up and make the ends short so the baby can’t pull on them.
+        </item>
+    </string-array>
+
+    <string-array name="safety_tip_9">
+        <item>Pacifier</item>
+        <item>Pacifiers can be a great tool when helping you put your baby to sleep and they have been proven to reduce the risk of SIDS (sudden infant death syndrome). You can offer a pacifier to a baby when putting them to sleep. If you are breastfeeding, you should wait approximately one month or after breastfeeding has been established to introduce the pacifier. Donť force the pacifier to your little one if they refuse it.
+	Of course it is completely up to you if you choose to use pacifiers, in any case the decision is yours and yours alone.
+        </item>
+    </string-array>
+
+    <string-array name="safety_tip_10">
+        <item> Keep your baby smoke free</item>
+        <item>Both you and your partner should try not to smoke during pregnancy and after birth. Smoking has been proven to greatly increase the chance of SIDS (sudden infant death syndrome). You should also keep your little one out of smoky areas in general and don’t let people smoke around your child in your home, car and other places where your baby spends a lot of time. Don’t sleep in the same bed as your baby when you are a smoker, even if you don’t smoke in the bedroom or in the house.
+        </item>
+    </string-array>
+    <string-array name="safety_tip_11">
+        <item>Don’t use commercial safety devices</item>
+        <item>You should avoid using commercial devices that claim to reduce the risk of SIDS. These devices such as wedges, positioners, special mattresses and special sleep surfaces have not been proven to reduce the risk of SIDS or that they are in fact safe. Some may even cause more harm than good when the baby turns to the side in their sleep and their heads get positioned between the safety device risking serious damage.
+	Your little loved one should sleep in an empty crib on a firm mattress and always on their back. That way, the risk of anything happening is minimal and you can rest well at night knowing your little one is safe.
+</item>
+    </string-array>
+
+    <string name="hour_hint">H</string>
+    <string name="minute_hint">M</string>
+    <string-array name="hour_display">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+    </string-array>
+
+    <string-array name="minute_display">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+    </string-array>
+
+    <string-array name="half_day">
+        <item>AM</item>
+        <item>PM</item>
+    </string-array>
+
+    <string name="label_countdown_description_placeholder">Sound Stops at 16:00</string>
+    <string name="label_countdown_placeholder">OFF</string>
+    <string name="label_monitor_on_description">Sound will restart if stopped and sound meter exceeds arrow position. Adjust duration and max restarts in settings.</string>
+    <string name="label_monitor_off_description">Enable baby monitor to restart sound if crying detected</string>
+    <string name="label_empty">No Record Found Yet</string>
+</resources>

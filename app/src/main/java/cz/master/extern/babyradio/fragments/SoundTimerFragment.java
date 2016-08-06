@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import cn.carbswang.android.numberpickerview.library.NumberPickerView;
 import cz.master.extern.babyradio.R;
 import cz.master.extern.babyradio.helper.BarLevelDrawable;
+import cz.master.extern.babyradio.helper.Fonts;
 import cz.master.extern.babyradio.helper.MicrophoneInput;
 import cz.master.extern.babyradio.helper.PermissionHandler;
 import cz.master.extern.babyradio.helper.SoundTimer;
@@ -37,6 +38,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
 
     private static final String TAG = "Sound Level";
+    public long lastCountDownTImerTIme = -1;
 
     public SoundTimerFragment() {
         // Required empty public constructor
@@ -105,6 +107,13 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         txt_baby_tips_stopwatch.setSelected(true);
         txt_baby_tips_stopwatch.setOnClickListener(this);
         txt_baby_tips_clock.setOnClickListener(this);
+        txt_baby_tips_stopwatch.setTypeface(Fonts.getUbuntuRegularTypeFace());
+        txt_baby_tips_clock.setTypeface(Fonts.getUbuntuRegularTypeFace());
+        Label_TimerCountdown.setTypeface(Fonts.getUbuntuLightTypeFace());
+        Label_TimerDescription.setTypeface(Fonts.getUbuntuLightTypeFace());
+        switch_baby_monitor.setTypeface(Fonts.getUbuntuRegularTypeFace());
+        TipLabel.setTypeface(Fonts.getUbuntuRegularTypeFace());
+        Button_TimerStartStop.setTypeface(Fonts.getUbuntuRegularTypeFace());
         Button_TimerStartStop.setOnClickListener(this);
         switch_baby_monitor.setOnClickListener(this);
         SensitivityBar.setEnabled(switch_baby_monitor.isSelected());
@@ -112,6 +121,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         SensitivityBar.setOnSeekBarChangeListener(this);
         SensitivityBar_upper.setOnSeekBarChangeListener(this);
         babyMonitorLimit = SensitivityBar_upper.getProgress();
+        initStopWatch();
         //***************************
         mBarLevel = (BarLevelDrawable) rootView.findViewById(R.id.bar_level_drawable_view);
         micInput = new MicrophoneInput(this);
@@ -135,10 +145,9 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     }
 
     void initStopWatch() {
-        initTime();
-//        setData(mPickerViewH, 0, 23, 0);
-//        setData(mPickerViewM, 0, 59, 0);
-//        setData(mPickerViewD, 0, 1, 0);
+        setData(mPickerViewH, 0, 23, 0);
+        setData(mPickerViewM, 0, 59, 1);
+        setData(mPickerViewD, 0, 1, 0);
     }
 
     private void setData(NumberPickerView picker, int minValue, int maxValue, int value) {
@@ -221,27 +230,31 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                         //Implement as time as clock is set
                         Calendar now = Calendar.getInstance();
                         Calendar SoundTimeCal = Calendar.getInstance();
+                        int currentSecond = SoundTimeCal.get(Calendar.SECOND);
+                        Log.d("Current Second", currentSecond + "");
                         SoundTimeCal.set(Calendar.HOUR_OF_DAY, hourTime);
                         SoundTimeCal.set(Calendar.MINUTE, minuteTime);
+                        SoundTimeCal.set(Calendar.SECOND, currentSecond);
                         if (now.getTime().before(SoundTimeCal.getTime())) {
-                            container_timer_text.setVisibility(View.VISIBLE);
-                            container_timer_picker.setVisibility(View.INVISIBLE);
-                            long hoursMilis = SoundTimeCal.getTimeInMillis() - now.getTimeInMillis();
-                            SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
-                            soundTimer.resetTimer();
-                            soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
-                            soundTimer.start();
-                            SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
-                            String timeForStopSound = df.format(SoundTimeCal.getTime());
-                            Label_TimerDescription.setText("Sound Stop at " + timeForStopSound);
-                            Toast.makeText(getActivity(), "Valid Timer", Toast.LENGTH_LONG).show();
+
                         } else {
-                            Toast.makeText(getActivity(), "Please Select Valid Time", Toast.LENGTH_LONG).show();
-                            return;
+                            SoundTimeCal.setTimeInMillis(SoundTimeCal.getTimeInMillis() + TimeUnit.DAYS.toMillis(1));
                         }
+                        container_timer_text.setVisibility(View.VISIBLE);
+                        container_timer_picker.setVisibility(View.INVISIBLE);
+                        now.set(Calendar.SECOND, 0);
+                        long hoursMilis = SoundTimeCal.getTimeInMillis() - now.getTimeInMillis();
+                        lastCountDownTImerTIme = hoursMilis;
+                        SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
+                        soundTimer.resetTimer();
+                        soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
+                        soundTimer.start();
+                        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss a");
+                        String timeForStopSound = df.format(SoundTimeCal.getTime());
+                        Label_TimerDescription.setText("Sound Stop at " + timeForStopSound);
                     } else {
                         //Implement as stopwatch is set
-                        if (hourTime == 0 && minuteTime == 0) {
+                        if (hourTime == 0 && minuteTime == 0 && txt_baby_tips_stopwatch.isSelected()) {
                             Toast.makeText(getActivity(), "Please Select Valid Time", Toast.LENGTH_LONG).show();
                             return;
                         }
@@ -260,7 +273,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                         String timeForStopSound = df.format(calendarNow.getTime());
                         Label_TimerDescription.setText("Sound Stop at " + timeForStopSound);
                     }//end of else
-                    TipLabel.setText(getResources().getString(R.string.label_monitor_on_description));
+                   // TipLabel.setText(getResources().getString(R.string.label_monitor_on_description));
                     Button_TimerStartStop.setText("Stop");
                 }//end of if for playing timer
                 else {
@@ -272,7 +285,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
     public void toStopSoundTimer() {
         try {
-            TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
+         //   TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
             Button_TimerStartStop.setText("Start");
             container_timer_text.setVisibility(View.GONE);
             container_timer_picker.setVisibility(View.VISIBLE);
@@ -351,7 +364,15 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
      */
     private void performOperationForBabyMonitor() {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.restartSoundAfterBabyMonitor();
+        if (homeActivity != null) {
+            homeActivity.restartSoundAfterBabyMonitor();
+            if (lastCountDownTImerTIme != -1) {
+                SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), lastCountDownTImerTIme, Label_TimerCountdown);
+                soundTimer.resetTimer();
+                soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), lastCountDownTImerTIme, Label_TimerCountdown);
+                soundTimer.start();
+            }
+        }
     }//enmd of funciton
 
     @Override

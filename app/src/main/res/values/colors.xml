@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#38BEC7</color>
+    <color name="colorPrimaryDark">#38BECF</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="btn_babytips_selected_color">#37BEC6</color>
+    <color name="txt_babytips_item_color">#5A5C63</color>
+    <color name="btn_bg_to_play">#55B936</color>
+    <color name="list_divider_color">#CECECE</color>
+    <color name="btn_baby_radio_bottom_sound_timer">#E0B32A</color>
+    <color name="btn_baby_radio_bottom_baby_mode">#BCB7B0</color>
+    <color name="txt_babyradio_media_item_unselected">#A1A1A1</color>
+    <color name="seekbarcolor">#706F8B</color>
+    <color name="log_circle_green">#FF1AAB00</color>
+    <color name="log_circle_red">#FFAB0000</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="colorGreen">#00ff00</color>
+    <color name="btn_bg_to_pause">#ff0000</color>
+    <color name="btn_baby_radio_bottom_sound_timer_unselected">#BCB7B0</color>
+    <color name="toggle_color">#37bec6</color>
+</resources>

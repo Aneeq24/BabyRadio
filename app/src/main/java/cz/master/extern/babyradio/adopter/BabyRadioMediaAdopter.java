@@ -20,6 +20,7 @@ import java.util.List;
 import cz.master.extern.babyradio.R;
 import cz.master.extern.babyradio.fragments.BabyRadioFragment;
 import cz.master.extern.babyradio.helper.DbHelper;
+import cz.master.extern.babyradio.helper.Fonts;
 import cz.master.extern.babyradio.models.MediaFileModel;
 
 /**
@@ -30,8 +31,8 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
     Activity context;
     LayoutInflater inflater;
     DbHelper dbHelper;
-    public  MediaPlayer mediaPlayerObj;
-    public  String pathForMediaFile;
+    public MediaPlayer mediaPlayerObj;
+    public String pathForMediaFile;
     BabyRadioFragment babyRadioFragment;
 
     public BabyRadioMediaAdopter(@NonNull Activity context, BabyRadioFragment babyRadioFragment) {
@@ -67,6 +68,7 @@ public class BabyRadioMediaAdopter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.template_babyradio_mediaitem, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.txt_babyradio_media_item = (TextView) convertView.findViewById(R.id.txt_babyradio_media_item);
+            viewHolder.txt_babyradio_media_item.setTypeface(Fonts.getUbuntuRegularTypeFace());
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }//end of else
