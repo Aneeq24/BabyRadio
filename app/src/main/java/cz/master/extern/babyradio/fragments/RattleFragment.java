@@ -11,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Random;
-
-import cz.master.extern.babyradio.helper.GameBoard;
 import cz.master.extern.babyradio.helper.RattleView;
 
 
@@ -54,15 +51,15 @@ public class RattleFragment extends Fragment {
     public void onResume() {
         super.onResume();
         sensorManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
-//        sensorManager.registerListener(level1View,
-//                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-//                SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(level1View,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // sensorManager.unregisterListener(level1View);
+        sensorManager.unregisterListener(level1View);
     }//end of onPause
 }//end of fragment
 

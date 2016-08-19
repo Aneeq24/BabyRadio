@@ -279,6 +279,7 @@ public class HomeActivity extends PromotionActivity {
             babyRadioFragmentObj.txt_baby_radio_sounds_timer_bottom.setSelected(false);
             babyRadioFragmentObj.btn_babyradio_play_pause.setSelected(false);
             babyRadioFragmentObj.btn_babyradio_play_pause.setText("Play");
+            babyRadioFragmentObj.insertMessageToDb("Automatic Stop");
             if (babyRadioFragmentObj.mediaPlayerObj != null) {
                 try {
                     babyRadioFragmentObj.mediaPlayerObj.stop();
@@ -287,7 +288,9 @@ public class HomeActivity extends PromotionActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }//end of catch
+                babyRadioFragmentObj.txt_baby_radio_sounds_timer_bottom.setText("Sound Timer");
             }//end of
+
             if (SoundTimer.soundTimerObj != null)
                 SoundTimer.soundTimerObj.resetTimer();
         }

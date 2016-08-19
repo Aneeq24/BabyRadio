@@ -67,6 +67,8 @@ public class BabyRadioFragment extends Fragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_baby_radio, container, false);
+
+        isSound = false;//this is for getting uri from sound
         init();
         initBabyMode();
         return rootView;
@@ -76,20 +78,20 @@ public class BabyRadioFragment extends Fragment implements View.OnClickListener,
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             boolean statusForAeroplaneMode = isAirplaneMode();
             if (statusForAeroplaneMode) {
-                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: Off");
+                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: OFF");
                 txt_baby_radio_baby_mode_bottom.setSelected(false);
             } else {
-                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: On");
+                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: ON");
                 txt_baby_radio_baby_mode_bottom.setSelected(true);
             }
         } else {
             AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
             if (am.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: On");
+                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: ON");
                 txt_baby_radio_baby_mode_bottom.setSelected(true);
             } else {
                 txt_baby_radio_baby_mode_bottom.setSelected(false);
-                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: Off");
+                txt_baby_radio_baby_mode_bottom.setText("Baby Mode: OFF");
             }
         }
     }//end of initBabyMode
@@ -112,7 +114,8 @@ public class BabyRadioFragment extends Fragment implements View.OnClickListener,
         txt_baby_radio_baby_mode_bottom = (TextView) rootView.findViewById(R.id.txt_baby_radio_baby_mode_bottom);
         context = getActivity();
         wheelCenter = (WheelPicker) rootView.findViewById(R.id.main_wheel_center);
-        wheelCenter.setItemTextSize(20);
+        wheelCenter.setItemTextSize(27);
+        wheelCenter.setAtmospheric(true);
         allMusicFiles = new ArrayList<>();
         allSoundFiles = new ArrayList<>();
         populateMusicFromAsset();
@@ -219,20 +222,20 @@ public class BabyRadioFragment extends Fragment implements View.OnClickListener,
                     boolean statusForAeroplaneMode = isAirplaneMode();
                     toggleAirplaneMode(statusForAeroplaneMode);
                     if (statusForAeroplaneMode) {
-                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: Off");
+                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: OFF");
                     } else {
-                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: On");
+                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: ON");
                     }
                 } else {
                     String text = txt_baby_radio_baby_mode_bottom.getText().toString();
-                    if (text.contains("Off")) {
+                    if (text.toLowerCase().contains("off")) {
                         AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
                         am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: On");
+                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: ON");
                     } else {
                         AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
                         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: Off");
+                        txt_baby_radio_baby_mode_bottom.setText("Baby Mode: OFF");
                     }
                 }
                 txt_baby_radio_baby_mode_bottom.setSelected(!txt_baby_radio_baby_mode_bottom.isSelected());

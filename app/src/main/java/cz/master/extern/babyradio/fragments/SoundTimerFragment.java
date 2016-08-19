@@ -38,7 +38,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
 
     private static final String TAG = "Sound Level";
-    public long lastCountDownTImerTIme = -1;
+    public volatile long lastCountDownTImerTIme = -1;
 
     public SoundTimerFragment() {
         // Required empty public constructor
@@ -228,13 +228,14 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                     getTimeFromPicker();
                     if (txt_baby_tips_clock.isSelected()) {
                         //Implement as time as clock is set
-                        Calendar now = Calendar.getInstance();
+
                         Calendar SoundTimeCal = Calendar.getInstance();
                         int currentSecond = SoundTimeCal.get(Calendar.SECOND);
                         Log.d("Current Second", currentSecond + "");
                         SoundTimeCal.set(Calendar.HOUR_OF_DAY, hourTime);
                         SoundTimeCal.set(Calendar.MINUTE, minuteTime);
                         SoundTimeCal.set(Calendar.SECOND, currentSecond);
+                        Calendar now = Calendar.getInstance();
                         if (now.getTime().before(SoundTimeCal.getTime())) {
 
                         } else {
@@ -243,13 +244,13 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                         container_timer_text.setVisibility(View.VISIBLE);
                         container_timer_picker.setVisibility(View.INVISIBLE);
                         now.set(Calendar.SECOND, 0);
-                        long hoursMilis = SoundTimeCal.getTimeInMillis() - now.getTimeInMillis();
+                        long hoursMilis = SoundTimeCal.getTimeInMillis() - now.getTimeInMillis() - 60000;
                         lastCountDownTImerTIme = hoursMilis;
                         SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
                         soundTimer.resetTimer();
                         soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
                         soundTimer.start();
-                        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss a");
+                        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
                         String timeForStopSound = df.format(SoundTimeCal.getTime());
                         Label_TimerDescription.setText("Sound Stop at " + timeForStopSound);
                     } else {
@@ -263,6 +264,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                         long hoursMilis = TimeUnit.HOURS.toMillis(hourTime);
                         long minutesMilis = TimeUnit.MINUTES.toMillis(minuteTime);
                         hoursMilis = hoursMilis + minutesMilis;
+                        lastCountDownTImerTIme = hoursMilis;
                         SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
                         soundTimer.resetTimer();
                         soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), hoursMilis, Label_TimerCountdown);
@@ -273,11 +275,13 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
                         String timeForStopSound = df.format(calendarNow.getTime());
                         Label_TimerDescription.setText("Sound Stop at " + timeForStopSound);
                     }//end of else
-                   // TipLabel.setText(getResources().getString(R.string.label_monitor_on_description));
+                    // TipLabel.setText(getResources().getString(R.string.label_monitor_on_description));
                     Button_TimerStartStop.setText("Stop");
+                    Button_TimerStartStop.setSelected(true);
                 }//end of if for playing timer
                 else {
                     toStopSoundTimer();
+
                 }
                 break;
         }//end of switch
@@ -285,9 +289,10 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
     public void toStopSoundTimer() {
         try {
-         //   TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
+            //   TipLabel.setText(getResources().getString(R.string.label_monitor_off_description));
             Button_TimerStartStop.setText("Start");
             container_timer_text.setVisibility(View.GONE);
+            Button_TimerStartStop.setSelected(false);
             container_timer_picker.setVisibility(View.VISIBLE);
             SoundTimer soundTimer = SoundTimer.getSoundTimerObj((HomeActivity) getActivity(), 10000, Label_TimerCountdown);
             soundTimer.resetTimer();
@@ -346,6 +351,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
 
     public void afterPermsissionGranted() {
         onClick(switch_baby_monitor);
+        switch_baby_monitor.setSelected(true);
     }
 
     @Override

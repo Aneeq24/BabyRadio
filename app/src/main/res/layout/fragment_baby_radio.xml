@@ -106,7 +106,6 @@
             android:layout_height="match_parent"
             aigestudio:wheel_curved="true"
             aigestudio:wheel_cyclic="true"
-            aigestudio:wheel_indicator="true"
             aigestudio:wheel_indicator_color="#A2A2A2"
             aigestudio:wheel_item_space="30dp"
             aigestudio:wheel_item_text_color="#A2A2A2"
@@ -128,7 +127,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_baby_radio_screen_bottom_shape"
             android:gravity="center"
-            android:text="Sound Timer Off"
+            android:text="Sound Timer"
             android:textColor="@android:color/white"
             android:textSize="@dimen/txt_baby_radio_btns_bottom_textsize" />
 
@@ -139,7 +138,7 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/btn_baby_radio_bottom_baby_mode"
             android:gravity="center"
-            android:text="Baby Mode: Off"
+            android:text="Baby Mode: OFF"
             android:textColor="@android:color/white"
             android:textSize="@dimen/txt_baby_radio_btns_bottom_textsize" />
     </LinearLayout>
