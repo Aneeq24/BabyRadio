@@ -22,6 +22,8 @@ public class BabyRadioApplication extends Application {
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlMX14ASUvZVHLgVmCrYu27PiYHfmKhyf7LZhuoHmCQSLbJCSqfVddymlFmRxtQ2gSCKvRQIxiESCNmT2GLg2FsVxxtWtkW3Urtl/p8igHGBNThtCaNkIAP8zoLDhT1XrLoE5PdB2j5LAPbbbytSsu6ZUxJ/xRDuUePVQ3gx0VXR/x2IAOIZXpdIwqlfEGIxbOYITJDTT5x8Pq9yMfphFI3YHpDlXs1ePxI1d4o0D7ikcThLKRfLKkyP6ufATHhOCHHrnqdMP/QKtK5AS3qJQGfTBb4uIUMcWsQbCJAiw/E8ioCHL+ZIWEGnRcW6NM+YMS/zsC/R9Zyoa2QgEA6/bDQIDAQAB",
                 "android.test.purchased",
                 true,
+                true,
+                false,
                 getApplicationContext()
         );
         Mint.initAndStartSession(this, "1ff7c79c");

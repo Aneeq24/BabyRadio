@@ -245,8 +245,8 @@ public class RattleView extends View implements SensorEventListener {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                final int distY = Math.abs(yTouch - preYTouch);
-                final int distX = Math.abs(xTouch - preXTouch);
+                final int distY = Math.abs(yTouch - preYTouch) / 2;
+                final int distX = Math.abs(xTouch - preXTouch) / 2;
                 if (ballTouch1) {
                     if (distX > mTouchSlop || distY > mTouchSlop) {
                         int deltaX = (xTouch - preXTouch);
@@ -354,6 +354,7 @@ public class RattleView extends View implements SensorEventListener {
                 }
                 preXTouch = xTouch;
                 preYTouch = yTouch;
+               invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 ballTouch1 = false;
@@ -467,7 +468,7 @@ public class RattleView extends View implements SensorEventListener {
         point3 = new Point(7, 400);
         point4 = new Point(355, 400);
         point5 = new Point(77, 200);
-        point6 = new Point(700, 300);
+        point6 = new Point(70, 300);
         point7 = new Point(7, 400);
         point8 = new Point(7, 400);
 
@@ -563,7 +564,9 @@ public class RattleView extends View implements SensorEventListener {
                 sprite1Velocity.x = sprite2Velocity.x;
                 sprite1Velocity.y = sprite2Velocity.y;
                 sprite2Velocity = new Point(temp1Velocity);
-
+                if (rectBall1.contains(point2.x, point2.y)) {
+                    rectBall2.offset(point2.x, point2.y);
+                }
 
 //                if (r1.right > r2.left && ((r1.right - r2.left) / r1.width()) * 100 > 25 && r1.top < r2.bottom) {
 //                    point1.x -= Math.ceil(r1.right - r2.left);
@@ -576,9 +579,6 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point2.y -= Math.ceil(r2.bottom - r1.top);
 //                }
-                if (sprite1Velocity.equals(sprite2Velocity)) {
-                    sprite1Velocity.negate();
-                }
             }
             isCollide = checkForCollision(point1, point3, rectBall1, rectBall3, ball1, ball3);
             if (isCollide) {
@@ -597,9 +597,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point3.y -= Math.ceil(r3.bottom - r1.top);
 //                }
-                if (sprite1Velocity.equals(sprite3Velocity)) {
-                    sprite1Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point1, point4, rectBall1, rectBall4, ball1, ball4);
             if (isCollide) {
@@ -618,9 +616,6 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point2.y -= Math.ceil(r4.bottom - r1.top);
 //                }
-                if (sprite1Velocity.equals(sprite4Velocity)) {
-                    sprite1Velocity.negate();
-                }
             }
 
 
@@ -641,9 +636,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point5.y -= Math.ceil(r5.bottom - r1.top);
 //                }
-                if (sprite1Velocity.equals(sprite5Velocity)) {
-                    sprite1Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point1, point6, rectBall1, rectBall6, ball1, ball6);
             if (isCollide) {
@@ -651,9 +644,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite1Velocity.x = sprite6Velocity.x;
                 sprite1Velocity.y = sprite6Velocity.y;
                 sprite6Velocity = new Point(temp1Velocity);
-                if (sprite1Velocity.equals(sprite6Velocity)) {
-                    sprite1Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point1, point7, rectBall1, rectBall7, ball1, ball7);
             if (false && isCollide) {
@@ -661,9 +652,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite1Velocity.x = sprite7Velocity.x;
                 sprite1Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp1Velocity);
-                if (sprite1Velocity.equals(sprite7Velocity)) {
-                    sprite1Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point1, point8, rectBall1, rectBall8, ball1, ball8);
             if (false && isCollide) {
@@ -671,9 +660,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite1Velocity.x = sprite8Velocity.x;
                 sprite1Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp1Velocity);
-                if (sprite1Velocity.equals(sprite8Velocity)) {
-                    sprite1Velocity.negate();
-                }
+
             }
             //*******Now for 2 ball
             isCollide = checkForCollision(point2, point3, rectBall2, rectBall3, ball2, ball3);
@@ -692,9 +679,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point3.y -= point2.y - point3.y;
 //                }
-                if (sprite2Velocity.equals(sprite3Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point2, point4, rectBall2, rectBall4, ball2, ball4);
             if (isCollide) {
@@ -712,9 +697,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point4.y -= point2.y - point4.y;
 //                }
-                if (sprite2Velocity.equals(sprite4Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point2, point5, rectBall2, rectBall5, ball2, ball5);
             if (isCollide) {
@@ -732,9 +715,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point5.y -= point2.y - point5.y;
 //                }
-                if (sprite2Velocity.equals(sprite5Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point2, point6, rectBall2, rectBall6, ball2, ball6);
             if (isCollide) {
@@ -742,9 +723,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite2Velocity.x = sprite6Velocity.x;
                 sprite2Velocity.y = sprite6Velocity.y;
                 sprite6Velocity = new Point(temp2Velocity);
-                if (sprite2Velocity.equals(sprite6Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point2, point7, rectBall2, rectBall7, ball2, ball7);
             if (false && isCollide) {
@@ -752,9 +731,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite2Velocity.x = sprite7Velocity.x;
                 sprite2Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp2Velocity);
-                if (sprite2Velocity.equals(sprite7Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point2, point8, rectBall2, rectBall8, ball2, ball8);
             if (false && isCollide) {
@@ -762,9 +739,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite2Velocity.x = sprite8Velocity.x;
                 sprite2Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp2Velocity);
-                if (sprite2Velocity.equals(sprite8Velocity)) {
-                    sprite2Velocity.negate();
-                }
+
             }
 
             //***************Ball 3
@@ -784,9 +759,7 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point4.y -= point3.y - point4.y;
 //                }
-                if (sprite3Velocity.equals(sprite4Velocity)) {
-                    sprite3Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point3, point5, rectBall3, rectBall5, ball3, ball5);
             if (isCollide) {
@@ -804,19 +777,15 @@ public class RattleView extends View implements SensorEventListener {
 //                } else {
 //                    point5.y -= point3.y - point5.y;
 //                }
-                if (sprite3Velocity.equals(sprite5Velocity)) {
-                    sprite3Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point3, point6, rectBall3, rectBall6, ball3, ball6);
-            if ( isCollide) {
+            if (isCollide) {
                 Point temp3Velocity = new Point(sprite3Velocity);
                 sprite3Velocity.x = sprite6Velocity.x;
                 sprite3Velocity.y = sprite6Velocity.y;
                 sprite6Velocity = new Point(temp3Velocity);
-                if (sprite3Velocity.equals(sprite6Velocity)) {
-                    sprite3Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point3, point7, rectBall3, rectBall7, ball3, ball7);
             if (false && isCollide) {
@@ -824,9 +793,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite3Velocity.x = sprite7Velocity.x;
                 sprite3Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp3Velocity);
-                if (sprite3Velocity.equals(sprite7Velocity)) {
-                    sprite3Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point3, point8, rectBall3, rectBall8, ball3, ball8);
             if (false && isCollide) {
@@ -834,9 +801,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite3Velocity.x = sprite8Velocity.x;
                 sprite3Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp3Velocity);
-                if (sprite3Velocity.equals(sprite8Velocity)) {
-                    sprite3Velocity.negate();
-                }
+
             }
 
             //**************Ball 4
@@ -856,19 +821,15 @@ public class RattleView extends View implements SensorEventListener {
 //                    point5.y -= point4.y - point5.y;
 //                }
                 sprite5Velocity = new Point(temp4Velocity);
-                if (sprite4Velocity.equals(sprite5Velocity)) {
-                    sprite4Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point4, point6, rectBall4, rectBall6, ball4, ball6);
-            if ( isCollide) {
+            if (isCollide) {
                 Point temp4Velocity = new Point(sprite4Velocity);
                 sprite4Velocity.x = sprite6Velocity.x;
                 sprite4Velocity.y = sprite6Velocity.y;
                 sprite6Velocity = new Point(temp4Velocity);
-                if (sprite4Velocity.equals(sprite6Velocity)) {
-                    sprite4Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point4, point7, rectBall4, rectBall7, ball4, ball7);
             if (false && isCollide) {
@@ -876,9 +837,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite4Velocity.x = sprite7Velocity.x;
                 sprite4Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp4Velocity);
-                if (sprite4Velocity.equals(sprite7Velocity)) {
-                    sprite4Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point4, point8, rectBall4, rectBall8, ball4, ball8);
             if (false && isCollide) {
@@ -886,20 +845,16 @@ public class RattleView extends View implements SensorEventListener {
                 sprite4Velocity.x = sprite8Velocity.x;
                 sprite4Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp4Velocity);
-                if (sprite4Velocity.equals(sprite8Velocity)) {
-                    sprite4Velocity.negate();
-                }
+
             }
             //**********Ball 5
             isCollide = checkForCollision(point5, point6, rectBall5, rectBall6, ball5, ball6);
-            if ( isCollide) {
+            if (isCollide) {
                 Point temp4Velocity = new Point(sprite5Velocity);
                 sprite5Velocity.x = sprite6Velocity.x;
                 sprite5Velocity.y = sprite6Velocity.y;
                 sprite6Velocity = new Point(temp4Velocity);
-                if (sprite5Velocity.equals(sprite6Velocity)) {
-                    sprite5Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point5, point7, rectBall5, rectBall7, ball5, ball7);
             if (false && isCollide) {
@@ -907,9 +862,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite5Velocity.x = sprite7Velocity.x;
                 sprite5Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp5Velocity);
-                if (sprite5Velocity.equals(sprite7Velocity)) {
-                    sprite5Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point5, point8, rectBall5, rectBall8, ball5, ball8);
             if (false && isCollide) {
@@ -917,9 +870,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite5Velocity.x = sprite8Velocity.x;
                 sprite5Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp5Velocity);
-                if (sprite5Velocity.equals(sprite8Velocity)) {
-                    sprite5Velocity.negate();
-                }
+
             }
             //*********Ball 6
             isCollide = checkForCollision(point6, point7, rectBall6, rectBall7, ball6, ball7);
@@ -928,9 +879,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite6Velocity.x = sprite7Velocity.x;
                 sprite6Velocity.y = sprite7Velocity.y;
                 sprite7Velocity = new Point(temp6Velocity);
-                if (sprite6Velocity.equals(sprite7Velocity)) {
-                    sprite6Velocity.negate();
-                }
+
             }
             isCollide = checkForCollision(point6, point8, rectBall6, rectBall8, ball6, ball8);
             if (false && isCollide) {
@@ -938,9 +887,7 @@ public class RattleView extends View implements SensorEventListener {
                 sprite6Velocity.x = sprite8Velocity.x;
                 sprite6Velocity.y = sprite8Velocity.y;
                 sprite8Velocity = new Point(temp6Velocity);
-                if (sprite6Velocity.equals(sprite8Velocity)) {
-                    sprite6Velocity.negate();
-                }
+
             }
             //**********Ball7
 
@@ -1054,19 +1001,20 @@ public class RattleView extends View implements SensorEventListener {
                 point5.y = 5;
             }
             point6.x = point6.x + sprite6Velocity.x;
-            if (point6.x > sprite6MaxX || point6.x < 5) {
+            if (point6.x > sprite6MaxX) {
                 sprite6Velocity.x *= -1;
             }
+            if (point6.x < 5) {
+                sprite6Velocity.x *= -1;
+                point6.x = 5;
+            }
             point6.y = point6.y + sprite6Velocity.y;
-            if (point6.y > sprite6MaxX || point6.y < 5) {
+            if (point6.y > sprite6MaxY) {
                 sprite6Velocity.y *= -1;
             }
-            if (point6.x == 0) {
-                point6.x = 1;
-            }
-
-            if (point6.y == 0) {
-                point6.y = 1;
+            if (point6.y < 5) {
+                sprite6Velocity.y *= -1;
+                point6.y = 5;
             }
 
             point7.x = point7.x + sprite7Velocity.x;
@@ -1120,10 +1068,9 @@ public class RattleView extends View implements SensorEventListener {
         if (sprite1.x < 0 && sprite2.x < 0 && sprite1.y < 0 && sprite2.y < 0)
             return false;
         Rect r1 = new Rect(sprite1.x, sprite1.y, sprite1.x
-                + sprite1Bounds.width(), sprite1.y + sprite1Bounds.height());
+                + sprite1Bounds.width() + 5, sprite1.y + sprite1Bounds.height() + 5);
         Rect r2 = new Rect(sprite2.x, sprite2.y, sprite2.x +
-                sprite2Bounds.width(), sprite2.y + sprite2Bounds.height());
-        Rect r3 = new Rect(r1);
+                sprite2Bounds.width() + 5, sprite2.y + sprite2Bounds.height() + 5);
         if (r1.intersect(r2)) {
 
             return true;

@@ -2,6 +2,7 @@ package cz.master.extern.babyradio.fragments;
 
 
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +36,7 @@ import cz.master.extern.babyradio.ui.HomeActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SoundTimerFragment extends Fragment implements View.OnClickListener, MicrophoneInputListener, SeekBar.OnSeekBarChangeListener {
+public class SoundTimerFragment extends Fragment implements View.OnClickListener, MicrophoneInputListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
 
 
     private static final String TAG = "Sound Level";
@@ -115,7 +117,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
         TipLabel.setTypeface(Fonts.getUbuntuRegularTypeFace());
         Button_TimerStartStop.setTypeface(Fonts.getUbuntuRegularTypeFace());
         Button_TimerStartStop.setOnClickListener(this);
-        switch_baby_monitor.setOnClickListener(this);
+        switch_baby_monitor.setOnCheckedChangeListener(this);
         SensitivityBar.setEnabled(switch_baby_monitor.isSelected());
         SensitivityBar_upper.setEnabled(switch_baby_monitor.isSelected());
         SensitivityBar.setOnSeekBarChangeListener(this);
@@ -190,26 +192,7 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.switch_baby_monitor:
-                if (!permissionHandler.isPermissionAvailable(PermissionHandler.RECORD_AUDIO)) {
-                    permissionHandler.requestPermission(PermissionHandler.RECORD_AUDIO);
-                    return;
-                }
-                if (v.isSelected()) {
-                    micInput.stop();
-                    TipLabel.setText(getString(R.string.label_monitor_off_description));
-                    SensitivityBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            SensitivityBar.setProgress(0);
-                        }
-                    }, 100);
-                } else {
-                    TipLabel.setText(getString(R.string.label_monitor_on_description));
-                    micInput.start();
-                }
-                SensitivityBar.setEnabled(!v.isSelected());
-                SensitivityBar_upper.setEnabled(!v.isSelected());
-                v.setSelected(!v.isSelected());
+
                 break;
             case R.id.txt_baby_tips_stopwatch:
                 initStopWatch();
@@ -350,7 +333,6 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     }//end of function
 
     public void afterPermsissionGranted() {
-        onClick(switch_baby_monitor);
         switch_baby_monitor.setSelected(true);
     }
 
@@ -389,5 +371,32 @@ public class SoundTimerFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (!permissionHandler.isPermissionAvailable(PermissionHandler.RECORD_AUDIO)) {
+                permissionHandler.requestPermission(PermissionHandler.RECORD_AUDIO);
+                return;
+            }
+        }
+        if (!isChecked) {
+            micInput.stop();
+            TipLabel.setText(getString(R.string.label_monitor_off_description));
+            SensitivityBar.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SensitivityBar.setProgress(0);
+                }
+            }, 100);
+            SensitivityBar_upper.setEnabled(false);
+        } else {
+            TipLabel.setText(getString(R.string.label_monitor_on_description));
+            micInput.start();
+
+        }
+        SensitivityBar.setEnabled(isChecked);
+        SensitivityBar_upper.setEnabled(isChecked);
     }
 }//end of fragment
